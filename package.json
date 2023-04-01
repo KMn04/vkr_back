@@ -2,9 +2,9 @@
   "name": "vkr_back",
   "version": "1.0.0",
   "description": "server for vkr",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
-    "start": "index.js"
+    "start": "node index.mjs"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/KMn04/vkr_back#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongodb": "^5.1.0"
   }
 }
