@@ -1,0 +1,22 @@
+{
+  "name": "vkr_back",
+  "version": "1.0.0",
+  "description": "server for vkr",
+  "main": "index.js",
+  "scripts": {
+    "start": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KMn04/vkr_back.git"
+  },
+  "author": "Zarina Developer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KMn04/vkr_back/issues"
+  },
+  "homepage": "https://github.com/KMn04/vkr_back#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
