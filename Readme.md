@@ -13,3 +13,7 @@ npm i
 ```
 npm run start
 ```
+
+### Пример подключения монги
+
+[воть](https://github.com/mongodb-developer/mongodb-express-rest-api-example/blob/main/server/routes/posts.mjs)
