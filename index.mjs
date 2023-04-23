@@ -15,7 +15,8 @@ app.get('/', (req, res) => {
 })
 
 app.use("/comments", comments);
-app.use("/users", users)
+app.use("/users", users);
+app.use("/register", register)
 
 await sequelize.sync()
 
