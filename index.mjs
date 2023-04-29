@@ -3,8 +3,8 @@ import cors from 'cors';
 import comments from './routes/comments.mjs';
 import users from './routes/users.mjs';
 import register from './routes/register.mjs';
-import auth from './routes/auth.mjs';
 import sequelize from './db/postgre_connection.mjs';
+import { checkJWTMiddleware } from './middlewares/checkJWTMiddleware.mjs';
 
 const app = express();
 const port = 3000
@@ -16,10 +16,12 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+
+app.use("/comments", checkJWTMiddleware);
 app.use("/comments", comments);
+app.use("/users", checkJWTMiddleware);
 app.use("/users", users);
 app.use("/register", register);
-app.use("/auth", auth);
 
 sequelize.sync().then(() => {
   app.listen(port, function(){

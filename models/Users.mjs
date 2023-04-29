@@ -17,23 +17,23 @@ export const Users = sequelize.define('user', {
       allowNull: false
     },
     firstName: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false
     },
     secondName: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false
     },
     thirdName: {
-        type: Sequelize.STRING,
-        allowNull: true
+      type: Sequelize.STRING,
+      allowNull: true
     },
     email: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false
     },
     deleted_on: {
-        type: Sequelize.DATE,
-        allowNull: true
+      type: Sequelize.DATE,
+      allowNull: true
     }
   })
