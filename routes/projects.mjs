@@ -4,12 +4,11 @@ import { Project_relations } from "../models/Project_relations.mjs";
 import Sequelize from "sequelize";
 
 const router = express.Router();
-const { Op } = require("sequelize");
 
 router.get("/", async (req, res) => {
     const allUserProjects = await Project_relations.findAll({
         where: {
-            [Op.and]: [
+            [Sequelize.Op.and]: [
                 {user: req.user_id },
                 {deleted_on: null}
             ]
@@ -22,15 +21,16 @@ router.post("/create", async (req, res) => {
     const newProject = await Projects.create({
         name: req.body.name,
         description: req.body.description,
-        owner: req.body.user_id,
+        owner: req.body.user.user_id,
         status: 1
     });
     const newProjRel = await Project_relations.create({
         project: newProject.project_id,
         admin: newProject.owner,
+        user: newProject.owner,
         role: "owner"
     });
-    res.send.status(200);
+    res.send().status(200);
 });
 
 export default router
