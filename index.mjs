@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import comments from './routes/comments.mjs';
 import users from './routes/users.mjs';
+import projects from './routes/projects.mjs';
 import register from './routes/register.mjs';
 import sequelize from './db/postgre_connection.mjs';
 import { checkJWTMiddleware } from './middlewares/checkJWTMiddleware.mjs';
@@ -16,7 +17,8 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-
+app.use("/projects", checkJWTMiddleware);
+app.use("/projects", projects);
 app.use("/comments", checkJWTMiddleware);
 app.use("/comments", comments);
 app.use("/users", checkJWTMiddleware);

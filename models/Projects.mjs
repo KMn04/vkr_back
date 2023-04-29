@@ -12,13 +12,13 @@ export const Projects = sequelize.define('project', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    author: {
+    owner: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
     date_start: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: true
     },
     date_finish: {
         type: Sequelize.DATE,
@@ -50,7 +50,7 @@ export const Projects = sequelize.define('project', {
     },
     wiki: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
     },
     deleted_on: {
         type: Sequelize.DATE,
