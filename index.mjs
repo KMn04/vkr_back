@@ -3,6 +3,7 @@ import cors from 'cors';
 import comments from './routes/comments.mjs';
 import users from './routes/users.mjs';
 import register from './routes/register.mjs';
+import auth from './routes/auth.mjs';
 import sequelize from './db/postgre_connection.mjs';
 
 const app = express();
@@ -17,7 +18,8 @@ app.get('/', (req, res) => {
 
 app.use("/comments", comments);
 app.use("/users", users);
-app.use("/register", register)
+app.use("/register", register);
+app.use("/auth", auth);
 
 sequelize.sync().then(() => {
   app.listen(port, function(){

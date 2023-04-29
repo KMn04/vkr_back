@@ -2,7 +2,7 @@ import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 
 export const Users = sequelize.define('user', {
-    id: {
+    user_id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
       primaryKey: true,
@@ -16,4 +16,24 @@ export const Users = sequelize.define('user', {
       type: Sequelize.STRING,
       allowNull: false
     },
+    firstName: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    secondName: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    thirdName: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    deleted_on: {
+        type: Sequelize.DATE,
+        allowNull: true
+    }
   })
