@@ -24,7 +24,7 @@ router.post("/create", async (req, res) => {
         owner: req.body.user.user_id,
         status: 1
     });
-    const newProjRel = await Project_relations.create({
+    await Project_relations.create({
         project: newProject.project_id,
         admin: newProject.owner,
         user: newProject.owner,
