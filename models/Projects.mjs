@@ -12,6 +12,10 @@ export const Projects = sequelize.define('project', {
         type: Sequelize.STRING,
         allowNull: false
     },
+    author: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
     date_start: {
         type: Sequelize.DATE,
         allowNull: false
