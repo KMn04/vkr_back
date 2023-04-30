@@ -1,9 +1,5 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
-import { ProjectRelations } from "./ProjectRelations.mjs";
-import { Users } from "./Users.mjs";
-import { ProjectStatus } from "./ProjectStatus.mjs";
-import { Currency } from "./Currency.mjs";
 
 export const Projects = sequelize.define('project', {
     projectId: {
@@ -50,7 +46,3 @@ export const Projects = sequelize.define('project', {
     }
 });
 
-Projects.hasMany(ProjectRelations, {foreignKey: "project"});
-Projects.hasOne(Users, {foreignKey: "owner"});
-Projects.hasOne(ProjectStatus, {foreignKey: "status"});
-Projects.hasOne(Currency, {foreignKey: "currency"});

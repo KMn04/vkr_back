@@ -1,5 +1,6 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
+import {ProjectRelations} from "./ProjectRelations.mjs";
 
 export const Users = sequelize.define('user', {
     userId: {
@@ -36,4 +37,7 @@ export const Users = sequelize.define('user', {
       type: Sequelize.DATE,
       allowNull: true
     }
-  })
+  });
+
+Users.hasMany(ProjectRelations, {foreignKey: "admin"});
+Users.hasMany(ProjectRelations, {foreignKey: "user"});

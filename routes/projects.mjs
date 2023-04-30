@@ -8,9 +8,10 @@ router.get("/", async (req, res) => {
     const allUserProjects = await ProjectRelations.findAll({
         where: {
             user: req.body.user.userId,
-            deleted_on: null,
+            deletedAt: null,
         },
-        include: { model: Projects }
+        include: Projects,
+        required: true
     });
     res.send(allUserProjects).status(200);
 });
@@ -28,31 +29,27 @@ router.post("/", async (req, res) => {
     const newProject = await Projects.create({
         name: req.body.name,
         description: req.body.description,
-        owner: req.body.user.userId,
-        status: 1
     });
     await ProjectRelations.create({
-        project: newProject.projectId,
-        admin: newProject.owner,
-        user: newProject.owner,
+        projectId: newProject.projectId,
+        admin: req.body.user.userId,
+        user: req.body.user.userId,
         role: "owner"
     });
     res.send().status(200);
 });
 
 router.put("/:projectId", async(req, res) => {
-    const tempProject = await Projects.findByPk(req.body.projectId);
+    const tempProject = await Projects.findByPk(req.params.projectId);
     const {owner, user, ...newBody} = req.body;
     await tempProject.update(newBody);
     res.send().status(200);
 });
 
 router.delete("/:projectId", async(req, res) => {
-    await (await Projects.findByPk(req.body.projectId)).update({
-        deletedAt: req.body.deletedAt
-    }); //заменить метод на делит и разделить эвейты
+    const tempProject = await Projects.findByPk(req.params.projectId);
+    await tempProject.update({ deletedAt: Date.now() });
     res.send().status(200);
-    //убрать отображение проекта(?)
 });
-// круд + ид
+
 export default router

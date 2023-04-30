@@ -40,8 +40,7 @@ router.post("/login", async (req, res) => {
     //проверка по логину что пользователя нет
     if(!user_login){
         const err = new Error("Такой пользователь не существует");
-        err.status = 400;
-        res.send(err)
+        res.send(err).status(400);
     }
     const payload = {login: user_login.login};
     res.send({token: jwt.sign(payload, jwtConstants.secret )})
