@@ -11,10 +11,6 @@ export const Project_relations = sequelize.define('project_relations', {
         primaryKey: true,
         allowNull: false
     },
-    project: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
     admin: {
         type: Sequelize.INTEGER,
         allowNull: false
@@ -33,12 +29,10 @@ export const Project_relations = sequelize.define('project_relations', {
    }
 });
 
-Project_relations.hasOne(Projects, {
-    foreignKey: 'project'
-});
-Project_relations.hasOne(Users, {
-    foreignKey: 'admin'
-});
-Project_relations.hasOne(Users, {
-    foreignKey: 'user'
-});
+// Project_relations.hasOne(Users, {
+//     foreignKey: 'admin'
+// });
+// Project_relations.hasOne(Users, {
+//     foreignKey: 'user'
+// });
+
