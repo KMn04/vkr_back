@@ -3,7 +3,7 @@ import sequelize from "../db/postgre_connection.mjs";
 import { Project_relations } from "./Project_relations.mjs";
 
 export const Projects = sequelize.define('project', {
-    project_id: {
+    projectId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -17,11 +17,11 @@ export const Projects = sequelize.define('project', {
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    date_start: {
+    dateStart: {
         type: Sequelize.DATE,
         allowNull: true
     },
-    date_finish: {
+    dateFinish: {
         type: Sequelize.DATE,
         allowNull: true
     },
@@ -41,11 +41,11 @@ export const Projects = sequelize.define('project', {
         type: Sequelize.INTEGER,
         allowNull: true
     },
-    sum_hours_plan: {
+    sumHoursPlan: {
         type: Sequelize.INTEGER,
         allowNull: true
     },
-    sum_hours_fact: {
+    sumHoursFact: {
         type: Sequelize.INTEGER,
         allowNull: true
     },
@@ -53,7 +53,7 @@ export const Projects = sequelize.define('project', {
         type: Sequelize.STRING,
         allowNull: true
     },
-    deleted_on: {
+    deletedAt: {
         type: Sequelize.DATE,
         allowNull: true
     }
