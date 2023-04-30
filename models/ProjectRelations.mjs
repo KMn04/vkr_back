@@ -1,8 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 
-
-export const projectRelations = sequelize.define('project_relations', {
+export const ProjectRelations = sequelize.define('project_relations', {
     projectRelationId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -18,4 +17,4 @@ export const projectRelations = sequelize.define('project_relations', {
        allowNull: true
    }
 });
-
+/* project admin user*/

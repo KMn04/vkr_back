@@ -2,7 +2,7 @@ import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 
 export const Tasks = sequelize.define('task', {
-    task_id: {
+    taskId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -12,35 +12,35 @@ export const Tasks = sequelize.define('task', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    type: {
+    /*type: {
         type: Sequelize.INTEGER,
         allowNull: false
-    },
-    project: {
+    },*/
+    /*project: {
         type: Sequelize.INTEGER,
         allowNull: false
-    },
-    sprint: {
+    },*/
+    /*sprint: {
         type: Sequelize.INTEGER,
         allowNull: false
-    },
-    date_start_plan: {
+    },*/
+    dateStartPlan: {
         type: Sequelize.DATE,
         allowNull: false
     },
-    date_start_fact: {
+    dateStartFact: {
         type: Sequelize.DATE,
         allowNull: false
     },
-    date_finish_plan: {
+    dateFinishPlan: {
         type: Sequelize.DATE,
         allowNull: false
     },
-    date_finish_fact: {
+    dateFinishFact: {
         type: Sequelize.DATE,
         allowNull: false
     },
-    assignee: {
+    /*assignee: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
@@ -51,28 +51,28 @@ export const Tasks = sequelize.define('task', {
     author: {
         type: Sequelize.INTEGER,
         allowNull: false
-    },
+    },*/
     description: {
         type: Sequelize.STRING,
         allowNull: true
     },
-    priority: {
+    /*priority: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
     status: {
         type: Sequelize.INTEGER,
         allowNull: false
-    },
-    sum_hours_plan: {
+    },*/
+    sumHoursPlan: {
         type: Sequelize.INTEGER,
         allowNull: true
     },
-    sum_hours_fact: {
+    sumHoursFact: {
         type: Sequelize.INTEGER,
         allowNull: true
     },
-    deleted_on: {
+    deletedAt: {
         type: Sequelize.DATE,
         allowNull: true
     }

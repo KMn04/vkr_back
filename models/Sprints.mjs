@@ -2,7 +2,7 @@ import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 
 export const Sprints = sequelize.define('sprint', {
-    sprint_id: {
+    sprintId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -16,11 +16,11 @@ export const Sprints = sequelize.define('sprint', {
         type: Sequelize.STRING,
         allowNull: true
     },
-    date_start: {
+    dateStart: {
         type: Sequelize.DATE,
         allowNull: false
     },
-    date_finish: {
+    dateFinish: {
         type: Sequelize.DATE,
         allowNull: false
     }

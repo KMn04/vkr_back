@@ -1,10 +1,10 @@
 import express from "express";
-import { Task_priority } from "../models/Task_priority.mjs";
+import { TaskPriority } from "../models/TaskPriority.mjs";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-    const allTask_priors = await Task_priority.findAll();
+    const allTask_priors = await TaskPriority.findAll();
     res.send(allTask_priors).status(200);
 });
 

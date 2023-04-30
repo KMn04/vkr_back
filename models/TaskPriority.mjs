@@ -1,8 +1,8 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 
-export const Project_status = sequelize.define('project_status', {
-    prSt_code: {
+export const TaskPriority = sequelize.define('task_priority', {
+    taskPriorityCode: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false

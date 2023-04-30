@@ -1,13 +1,13 @@
 import express from "express";
 import { Projects } from "../models/Projects.mjs";
-import { Project_relations } from "../models/Project_relations.mjs";
+import { ProjectRelations } from "../models/ProjectRelations.mjs";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-    const allUserProjects = await Project_relations.findAll({
+    const allUserProjects = await ProjectRelations.findAll({
         where: {
-            user: req.body.user.user_id,
+            user: req.body.user.userId,
             deleted_on: null,
         },
         include: { model: Projects }
@@ -16,23 +16,23 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:projectId", async (req, res) => {
-    if ((await ProjectRelations.findByPk(req.params.project_id)).user === req.body.user.user_id){
-        const project = await Projects.findByPk(req.params.project_id);
+    if ((await ProjectRelations.findByPk(req.params.projectId)).user === req.body.user.userId){
+        const project = await Projects.findByPk(req.params.projectId);
         res.send(project).status(200);
     } else{
         alert ('Не хватает прав');
     }
 });
 
-router.post("/create", async (req, res) => {
+router.post("/", async (req, res) => {
     const newProject = await Projects.create({
         name: req.body.name,
         description: req.body.description,
-        owner: req.body.user.user_id,
+        owner: req.body.user.userId,
         status: 1
     });
-    await projectRelations.create({
-        project: newProject.project_id,
+    await ProjectRelations.create({
+        project: newProject.projectId,
         admin: newProject.owner,
         user: newProject.owner,
         role: "owner"
@@ -40,16 +40,16 @@ router.post("/create", async (req, res) => {
     res.send().status(200);
 });
 
-router.put("/edit", async(req, res) => {
-    const tempProject = await Projects.findByPk(req.body.project_id);
+router.put("/:projectId", async(req, res) => {
+    const tempProject = await Projects.findByPk(req.body.projectId);
     const {owner, user, ...newBody} = req.body;
     await tempProject.update(newBody);
     res.send().status(200);
 });
 
-router.put("/delete", async(req, res) => {
-    await (await Projects.findByPk(req.body.project_id)).update({
-        deleted_on: req.body.deleted_on
+router.delete("/:projectId", async(req, res) => {
+    await (await Projects.findByPk(req.body.projectId)).update({
+        deletedAt: req.body.deletedAt
     }); //заменить метод на делит и разделить эвейты
     res.send().status(200);
     //убрать отображение проекта(?)
