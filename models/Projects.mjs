@@ -1,5 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
+import { Users } from "./Users.mjs";
+import { Project_relations } from "./Project_relations.mjs";
 
 export const Projects = sequelize.define('project', {
     project_id: {
@@ -57,3 +59,5 @@ export const Projects = sequelize.define('project', {
         allowNull: true
     }
 })
+
+Projects.belongsToMany(Users, {through: 'Project_relations', uniqueKey: 'projRel_id'} )
