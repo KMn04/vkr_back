@@ -4,7 +4,7 @@ import { Projects } from "./Projects.mjs";
 import { Users } from "./Users.mjs";
 
 
-export const Project_relations = sequelize.define('project_relations', {
+export const projectRelations = sequelize.define('projectRelations', {
     projRel_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -33,12 +33,12 @@ export const Project_relations = sequelize.define('project_relations', {
    }
 });
 
-Project_relations.hasOne(Projects, {
+projectRelations.hasOne(Projects, {
     foreignKey: 'project'
 });
-Project_relations.hasOne(Users, {
+projectRelations.hasOne(Users, {
     foreignKey: 'admin'
 });
-Project_relations.hasOne(Users, {
+projectRelations.hasOne(Users, {
     foreignKey: 'user'
 });

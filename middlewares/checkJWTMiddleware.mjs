@@ -10,17 +10,17 @@ export const checkJWTMiddleware = async (req, res, next) => {
   }
   try{
     const payload = jwt.verify(token, jwtConstants.secret);
-    const user_login = await Users.findOne({
+    const userLogin = await Users.findOne({
       where: {
         login: payload.login
       },
       raw: true
     })
-    if(!user_login){
+    if(!userLogin){
       throw ''
     }
     
-    req.body.user = user_login
+    req.body.user = userLogin
   }catch{
     res.send('not authorized')
     return;
