@@ -32,8 +32,8 @@ router.post("/", async (req, res) => {
     });
     await ProjectRelations.create({
         projectId: newProject.projectId,
-        admin: req.body.user.userId,
-        user: req.body.user.userId,
+        adminId: req.body.user.userId,
+        userId: req.body.user.userId,
         role: "owner"
     });
     res.send().status(200);
@@ -52,4 +52,7 @@ router.delete("/:projectId", async(req, res) => {
     res.send().status(200);
 });
 
+router.get("/:projectId/wiki", async(req, res) => {
+    res.send().status(200);
+});
 export default router

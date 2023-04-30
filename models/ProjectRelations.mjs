@@ -1,6 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 import {Projects} from "./Projects.mjs";
+import {Users} from "./Users.mjs";
 
 export const ProjectRelations = sequelize.define('project_relations', {
     projectRelationId: {
@@ -19,5 +20,12 @@ export const ProjectRelations = sequelize.define('project_relations', {
    }
 });
 
-Projects.hasMany(ProjectRelations, {foreignKey: "projectId"});
-ProjectRelations.belongsTo(Projects, {foreignKey: "projectId"});
+ProjectRelations.belongsTo(Projects, {
+    foreignKey: 'projectId'
+});
+ProjectRelations.belongsTo(Users, {
+    foreignKey: 'adminId'
+});
+ProjectRelations.belongsTo(Users, {
+    foreignKey: 'userId'
+});

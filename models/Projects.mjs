@@ -45,4 +45,3 @@ export const Projects = sequelize.define('project', {
         allowNull: true
     }
 });
-

@@ -4,6 +4,7 @@ import comments from './routes/comments.mjs';
 import users from './routes/users.mjs';
 import projects from './routes/projects.mjs';
 import register from './routes/register.mjs';
+import tasks from './routes/tasks.mjs';
 import sequelize from './db/postgre_connection.mjs';
 import { checkJWTMiddleware } from './middlewares/checkJWTMiddleware.mjs';
 
@@ -19,6 +20,8 @@ app.get('/', (req, res) => {
 
 app.use("/projects", checkJWTMiddleware);
 app.use("/projects", projects);
+app.use("/tasks", checkJWTMiddleware);
+app.use("/tasks", tasks);
 app.use("/comments", checkJWTMiddleware);
 app.use("/comments", comments);
 app.use("/users", checkJWTMiddleware);

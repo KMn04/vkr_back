@@ -1,5 +1,11 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
+import {TaskType} from "./TaskType.mjs";
+import {Projects} from "./Projects.mjs";
+import {Sprints} from "./Sprints.mjs";
+import {Users} from "./Users.mjs";
+import {TaskStatus} from "./TaskStatus.mjs";
+import {TaskPriority} from "./TaskPriority.mjs";
 
 export const Tasks = sequelize.define('task', {
     taskId: {
@@ -12,18 +18,6 @@ export const Tasks = sequelize.define('task', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    /*type: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },*/
-    /*project: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },*/
-    /*sprint: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },*/
     dateStartPlan: {
         type: Sequelize.DATE,
         allowNull: false
@@ -40,30 +34,10 @@ export const Tasks = sequelize.define('task', {
         type: Sequelize.DATE,
         allowNull: false
     },
-    /*assignee: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
-    supervisor: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
-    author: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },*/
     description: {
         type: Sequelize.STRING,
         allowNull: true
     },
-    /*priority: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
-    status: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },*/
     sumHoursPlan: {
         type: Sequelize.INTEGER,
         allowNull: true
@@ -76,4 +50,13 @@ export const Tasks = sequelize.define('task', {
         type: Sequelize.DATE,
         allowNull: true
     }
-})
+});
+
+Tasks.belongsTo(TaskType, {foreignKey: 'typeCode'});
+Tasks.belongsTo(Projects, {foreignKey: 'projectId'});
+Tasks.belongsTo(Sprints, {foreignKey: 'sprintId'});
+Tasks.belongsTo(Users, {foreignKey: 'assigneeId'});
+Tasks.belongsTo(Users, {foreignKey: 'supervisorId'});
+Tasks.belongsTo(Users, {foreignKey: 'authorId'});
+Tasks.belongsTo(TaskStatus, {foreignKey: 'statusCode'});
+Tasks.belongsTo(TaskPriority, {foreignKey: 'priorityCode'});

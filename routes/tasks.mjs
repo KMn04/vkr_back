@@ -8,4 +8,9 @@ router.get("/", async (req, res) => {
     res.send(allTasks).status(200);
 });
 
+router.post("/", async (req, res) => {
+    const allTasks = await Tasks.findAll();
+    res.send(allTasks).status(200);
+});
+
 export default router
