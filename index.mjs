@@ -1,32 +1,28 @@
 import express from 'express';
 import cors from 'cors';
-import comments from './routes/comments.mjs';
-import users from './routes/users.mjs';
-import projects from './routes/projects.mjs';
-import register from './routes/register.mjs';
-import tasks from './routes/tasks.mjs';
 import sequelize from './db/postgre_connection.mjs';
 import { checkJWTMiddleware } from './middlewares/checkJWTMiddleware.mjs';
+import register from './routes/register.mjs';
+import auth from './routes/auth.mjs';
+import projects from './routes/projects.mjs';
+import tasks from './routes/tasks.mjs';
 
-const app = express();
+export const app = express();
 const port = 3000
 
 app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Скоро тут будет главная страница с заманухой')
 })
 
 app.use("/projects", checkJWTMiddleware);
 app.use("/projects", projects);
 app.use("/tasks", checkJWTMiddleware);
 app.use("/tasks", tasks);
-app.use("/comments", checkJWTMiddleware);
-app.use("/comments", comments);
-app.use("/users", checkJWTMiddleware);
-app.use("/users", users);
 app.use("/register", register);
+app.use("/login", auth);
 
 sequelize.sync().then(() => {
   app.listen(port, function(){

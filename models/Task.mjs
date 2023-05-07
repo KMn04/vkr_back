@@ -20,19 +20,19 @@ export const Tasks = sequelize.define('task', {
     },
     dateStartPlan: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: true
     },
     dateStartFact: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: true
     },
     dateFinishPlan: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: true
     },
     dateFinishFact: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: true
     },
     description: {
         type: Sequelize.STRING,
