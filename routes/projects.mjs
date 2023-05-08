@@ -25,14 +25,18 @@ router.get("/", async (req, res) => {
     }
     const allUserProjects = await ProjectTeamMembers.findAll({
         where: whereRequest,
-        include: Projects,
+        include: [{
+            model: Projects,
+            attributes: {
+                exclude: ['wiki', 'updatedAt', 'createdAt']
+            }
+        }],
         required: true
     });
     const preparedResult = allUserProjects.map((projectModel) => {
         return {
             ...projectModel.project.dataValues,
             roleCode: projectModel.roleCode,
-            adminId: projectModel.adminId,
         }
     })
     res.send(preparedResult).status(200);
