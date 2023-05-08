@@ -42,27 +42,27 @@ router.get("/", async (req, res) => {
     res.send(preparedResult).status(200);
 });
 
-// получить только проекты самого пользователя
-router.get("/:userId", async (req, res) => {
-    const onlyUserProjects = await ProjectTeamMembers.findAll({
-        where: {
-            userId: req.params.userId,
-            roleCode: 1, // owner
-            finishedAt: null,
-        },
-        include: Projects,
-        required: true
-    });
-    res.send(onlyUserProjects).status(200);
-});
-
 // получить проект
 router.get("/:projectId", async (req, res) => {
-    if ((await ProjectTeamMembers.findByPk(req.params.projectId)).user === req.body.user.userId){
-        const project = await Projects.findByPk(req.params.projectId);
+    const tempProjectMember = await ProjectTeamMembers.findOne({
+        where: {
+            projectId: req.params.projectId,
+            userId: req.body.user.userId
+        }
+    }) 
+    if (tempProjectMember){
+        const project = await Projects.findByPk(
+            req.params.projectId,
+            {
+                attributes: {
+                    exclude: ['createdAt', 'deletedAt', 'updatedAt', 'wiki']
+                }
+            }
+        );
         res.send(project).status(200);
     } else{
-        alert ('У вас нет доступа к этому проекту');
+        res.status(400);
+        res.send('У вас нет доступа к этому проекту');
     }
 });
 
