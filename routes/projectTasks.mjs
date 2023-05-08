@@ -11,10 +11,7 @@ router.get("/:projectId/tasks", async (req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        },
-        order: [
-            ['startedAt', 'DESC']
-        ],
+        }
     });
     if (actualRole) {
         const allProjectTasks = await Tasks.findAll({
@@ -43,10 +40,7 @@ router.get("/:projectId/tasks/:taskId", async (req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        },
-        order: [
-            ['startedAt', 'DESC']
-        ],
+        }
     });
     if (actualRole) {
         const task = await Tasks.findByPk(
@@ -73,10 +67,7 @@ router.post("/:projectId/tasks", async (req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        },
-        order: [
-            ['startedAt', 'DESC']
-        ],
+        }
     });
     if (actualRole.roleCode < 4) {
         const newTask = await Tasks.create({
@@ -107,13 +98,17 @@ router.put("/:projectId/tasks/:taskId", async(req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        },
-        order: [
-            ['startedAt', 'DESC']
-        ],
+        }
     });
     if (actualRole.roleCode < 4) {
-        const tempTask = await Tasks.findByPk(req.params.taskId);
+        const tempTask = await Tasks.findByPk(
+            req.params.taskId,
+            {
+                where: {deletedAt: null},
+                attributes: {
+                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
+                }
+        });
         const {projectId, authorId, typeCode, ...newBody} = req.body;
         await tempTask.update(newBody);
         res.send(tempTask).status(200);
@@ -132,12 +127,16 @@ router.put("/:projectId/tasks/:taskId/changeStatus", async(req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        },
-        order: [
-            ['startedAt', 'DESC']
-        ],
+        }
     });
-    const thisTask = await Tasks.findByPk(req.params.taskId);
+    const thisTask = await Tasks.findByPk(
+        req.params.taskId,
+        {
+            where: {deletedAt: null},
+            attributes: {
+                exclude: ['createdAt', 'deletedAt', 'updatedAt']
+            }
+    });
     if (actualRole.roleCode < 4 || thisTask.assigneeId === req.body.user.userId || thisTask.supervisorId === req.body.user.userId) {
         await thisTask.update({ statusCode: req.body.statusCode });
         res.send(thisTask).status(200);
@@ -151,7 +150,14 @@ router.put("/:projectId/tasks/:taskId/changeStatus", async(req, res) => {
 
 // вписать часы по задаче
 router.put("/:projectId/tasks/:taskId/reportTime", async(req, res) => {
-    const thisTask = await Tasks.findByPk(req.params.taskId);
+    const thisTask = await Tasks.findByPk(
+        req.params.taskId,
+        {
+            where: {deletedAt: null},
+            attributes: {
+                exclude: ['createdAt', 'deletedAt', 'updatedAt']
+            }
+    });
     if (thisTask.assigneeId === req.body.user.userId) {
         const sumTime = +thisTask.sumHoursFact + +req.body.sumHoursFact;
         await thisTask.update({ sumHoursFact: sumTime });
@@ -171,13 +177,17 @@ router.delete("/:projectId/tasks/:taskId", async(req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        },
-        order: [
-            ['startedAt', 'DESC']
-        ],
+        }
     });
     if (actualRole.roleCode < 4) {
-        const thisTask = await Tasks.findByPk(req.params.taskId);
+        const thisTask = await Tasks.findByPk(
+            req.params.taskId,
+            {
+                where: {deletedAt: null},
+                attributes: {
+                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
+                }
+        });
         await thisTask.update({ deletedAt: Date.now() });
         res.send().status(200);
     }

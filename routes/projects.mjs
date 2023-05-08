@@ -49,19 +49,17 @@ router.get("/:projectId", async (req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        },
-        order: [
-            ['startedAt', 'DESC']
-        ],
+        }
     });
     if (actualRole) {
         const tempProject = await Projects.findByPk(
             req.params.projectId,
             {
+                where: {deletedAt: null},
                 attributes: {
                     exclude: ['createdAt', 'deletedAt', 'updatedAt']
                 }
-            })
+        })
         const preparedResult = {
                 ...tempProject.dataValues,
                 roleCode: actualRole.roleCode,
@@ -100,13 +98,17 @@ router.put("/:projectId", async(req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        },
-        order: [
-            ['startedAt', 'DESC']
-        ],
+        }
     });
     if (actualRole.roleCode < 3) {
-        const tempProject = await Projects.findByPk(req.params.projectId);
+        const tempProject = await Projects.findByPk(
+            req.params.projectId,
+            {
+                where: {deletedAt: null},
+                attributes: {
+                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
+                }
+            })
         const {ownerId, user, ...newBody} = req.body;
         await tempProject.update(newBody);
         const preparedResult = {
@@ -129,13 +131,17 @@ router.delete("/:projectId", async(req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        },
-        order: [
-            ['startedAt', 'DESC']
-        ],
+        }
     });
     if (actualRole.roleCode === 1) {
-        const tempProject = await Projects.findByPk(req.params.projectId);
+        const tempProject = await Projects.findByPk(
+            req.params.projectId,
+            {
+                where: {deletedAt: null},
+                attributes: {
+                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
+                }
+            })
         await tempProject.update({ deletedAt: Date.now() });
         const projectTeam = await ProjectTeamMembers.findAll({
             where: {
