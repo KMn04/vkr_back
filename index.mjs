@@ -17,12 +17,12 @@ app.get('/', (req, res) => {
   res.send('Скоро тут будет главная страница с заманухой')
 })
 
+app.use("/register", register);
+app.use("/login", auth);
 app.use("/projects", checkJWTMiddleware);
 app.use("/projects", projects);
 app.use("/tasks", checkJWTMiddleware);
 app.use("/tasks", tasks);
-app.use("/register", register);
-app.use("/login", auth);
 
 sequelize.sync().then(() => {
   app.listen(port, function(){

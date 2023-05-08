@@ -16,16 +16,16 @@ export const Projects = sequelize.define('project', {
         type: Sequelize.STRING,
         allowNull: false
     },
+    description: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
     dateStart: {
         type: Sequelize.DATE,
         allowNull: true
     },
     dateFinish: {
         type: Sequelize.DATE,
-        allowNull: true
-    },
-    description: {
-        type: Sequelize.STRING,
         allowNull: true
     },
     budget: {
@@ -38,10 +38,6 @@ export const Projects = sequelize.define('project', {
     },
     sumHoursFact: {
         type: Sequelize.INTEGER,
-        allowNull: true
-    },
-    wiki: {
-        type: Sequelize.STRING,
         allowNull: true
     },
     deletedAt: {

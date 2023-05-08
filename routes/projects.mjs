@@ -1,13 +1,13 @@
 import express from "express";
 import { Projects } from "../models/Projects.mjs";
 import { ProjectTeamMembers } from "../models/ProjectTeamMembers.mjs";
-import tasks from './tasks.mjs';
+import projectTasks from './projectTasks.mjs';
 import {Op} from 'sequelize'
 
 const router = express.Router();
 
 
-// получить все проекты пользователя
+// получить все проекты пользователя с учетом роли
 router.get("/", async (req, res) => {
     const whereRequest = {
         userId: req.body.user.userId,
@@ -28,7 +28,7 @@ router.get("/", async (req, res) => {
         include: [{
             model: Projects,
             attributes: {
-                exclude: ['wiki', 'updatedAt', 'createdAt']
+                exclude: ['updatedAt', 'createdAt']
             }
         }],
         required: true
@@ -44,27 +44,36 @@ router.get("/", async (req, res) => {
 
 // получить проект
 router.get("/:projectId", async (req, res) => {
-    const tempProjectMember = await ProjectTeamMembers.findOne({
+    const actualRole = await ProjectTeamMembers.findOne({
         where: {
             projectId: req.params.projectId,
-            userId: req.body.user.userId
-        }
-    }) 
-    if (tempProjectMember){
-        const project = await Projects.findByPk(
+            userId: req.body.user.userId,
+            finishedAt: null
+        },
+        order: [
+            ['startedAt', 'DESC']
+        ],
+    });
+    if (actualRole) {
+        const tempProject = await Projects.findByPk(
             req.params.projectId,
             {
                 attributes: {
-                    exclude: ['createdAt', 'deletedAt', 'updatedAt', 'wiki']
+                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
                 }
-            }
-        );
-        res.send(project).status(200);
-    } else{
-        res.status(400);
-        res.send('У вас нет доступа к этому проекту');
+            })
+        const preparedResult = {
+                tempProject,
+                roleCode: actualRole.roleCode,
+        }
+        res.send(preparedResult).status(200);
     }
-});
+    else {
+        const err = new Error("У вас нет доступа к этому проекту");
+        res.status(400);
+        res.send(err).status(400);
+    }}
+);
 
 // создать проект
 router.post("/", async (req, res) => {
@@ -86,27 +95,65 @@ router.post("/", async (req, res) => {
 
 // изменение проекта
 router.put("/:projectId", async(req, res) => {
-    const tempProject = await Projects.findByPk(req.params.projectId);
-    const {ownerId, user, ...newBody} = req.body;
-    await tempProject.update(newBody);
-    res.send().status(200);
+    const actualRole = await ProjectTeamMembers.findOne({
+        where: {
+            projectId: req.params.projectId,
+            userId: req.body.user.userId,
+            finishedAt: null
+        },
+        order: [
+            ['startedAt', 'DESC']
+        ],
+    });
+    if (actualRole.roleCode < 3) {
+        const tempProject = await Projects.findByPk(req.params.projectId);
+        const {ownerId, user, ...newBody} = req.body;
+        await tempProject.update(newBody);
+        const preparedResult = {
+                tempProject,
+                roleCode: actualRole.roleCode
+        };
+        res.send(preparedResult).status(200);
+    }
+    else {
+        const err = new Error("У вас нет прав доступа на изменение этого проекта");
+        res.status(400);
+        res.send(err).status(400);
+    }
 });
 
 // удаление проекта
 router.delete("/:projectId", async(req, res) => {
-    const tempProject = await Projects.findByPk(req.params.projectId);
-    await tempProject.update({ deletedAt: Date.now() });
-    const projectTeam = await ProjectTeamMembers.findAll({
+    const actualRole = await ProjectTeamMembers.findOne({
         where: {
             projectId: req.params.projectId,
-        }
+            userId: req.body.user.userId,
+            finishedAt: null
+        },
+        order: [
+            ['startedAt', 'DESC']
+        ],
     });
-    for (const member of projectTeam) {
-        await member.update({ finishedAt: Date.now() })
+    if (actualRole.roleCode === 1) {
+        const tempProject = await Projects.findByPk(req.params.projectId);
+        await tempProject.update({ deletedAt: Date.now() });
+        const projectTeam = await ProjectTeamMembers.findAll({
+            where: {
+                projectId: req.params.projectId,
+            }
+        });
+        for (const member of projectTeam) {
+            await member.update({ finishedAt: Date.now() })
+        }
+        res.send().status(200);
     }
-    res.send().status(200);
+    else {
+        const err = new Error("У вас нет прав доступа на удаление этого проекта");
+        res.status(400);
+        res.send(err).status(400);
+    }
 });
 
-router.use('/tasks', tasks);
+router.use('/:projectId/tasks', projectTasks);
 
 export default router
