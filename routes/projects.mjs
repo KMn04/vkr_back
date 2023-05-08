@@ -63,7 +63,7 @@ router.get("/:projectId", async (req, res) => {
                 }
             })
         const preparedResult = {
-                tempProject,
+                ...tempProject.dataValues,
                 roleCode: actualRole.roleCode,
         }
         res.send(preparedResult).status(200);
