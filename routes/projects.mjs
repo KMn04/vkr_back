@@ -37,11 +37,13 @@ router.get("/:userId", async (req, res) => {
 
 // получить только проекты, к которым у пользователя есть доступ
 router.get('/?roleCode=3', async (req, res) => {
+    console.log(req.query.roleCode);
     const userAccessProjects = await ProjectTeamMembers.findAll({
         where: {
             userId: req.body.user.userId,
-            roleCode: {[Op.not]: req.params.roleCode}, // not owner
-            //finishedAt: null,
+            //roleCode: {[Op.not]: req.query.roleCode}, // not owner
+            roleCode: req.query.roleCode, // not owner
+            finishedAt: null,
         },
         include: Projects,
         required: true

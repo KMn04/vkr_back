@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
     //проверка по логину что пользователя нет
     if(user_login){
         const err = new Error("Такой пользователь уже зарегистрирован");
-        err.status = 400;
+        res.status(400);
         res.send(err).status(400);
         return;
     }
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
     //проверка что почта не использовалась ранее
     if(user_email){
         const err = new Error("Пользователь с такой почтой уже зарегистрирован");
-        err.status = 400;
+        res.status(400);
         res.send(err).status(400);
         return;
     }

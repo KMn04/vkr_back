@@ -16,6 +16,7 @@ router.post("/", async (req, res) => {
     //проверка по логину что пользователь есть
     if(!user_login){
         const err = new Error("Такой пользователь не зарегистрирован");
+        res.status(400);
         res.send(err).status(400);
     }
     const payload = {login: user_login.login};
