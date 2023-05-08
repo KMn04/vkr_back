@@ -2,18 +2,29 @@ import express from "express";
 import { Projects } from "../models/Projects.mjs";
 import { ProjectTeamMembers } from "../models/ProjectTeamMembers.mjs";
 import tasks from './tasks.mjs';
+import {Op} from 'sequelize'
 
 const router = express.Router();
 
 
 // получить все проекты пользователя
 router.get("/", async (req, res) => {
+    const whereRequest = {
+        userId: req.body.user.userId,
+        finishedAt: null,
+    };
+    const roleCode = req.query.roleCode;
+    if(roleCode){
+        whereRequest.roleCode = roleCode;
+    }
+    const excludeRoleCode = req.query.excludeRoleCode;
+    if(excludeRoleCode){
+        whereRequest[Op.not] = {
+            roleCode: excludeRoleCode
+        }
+    }
     const allUserProjects = await ProjectTeamMembers.findAll({
-        where: {
-            userId: req.body.user.userId,
-            finishedAt: null,
-            roleCode: req.query.roleCode,
-        },
+        where: whereRequest,
         include: Projects,
         required: true
     });
