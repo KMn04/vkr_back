@@ -5,6 +5,7 @@ import {Users} from '../models/Users.mjs'
 export const checkJWTMiddleware = async (req, res, next) => {
   const token = req.headers?.authorization
   if(!token){
+    res.status(401)
     res.send('not authorized')
     return;
   }
@@ -22,7 +23,8 @@ export const checkJWTMiddleware = async (req, res, next) => {
     
     req.body.user = userLogin
   }catch{
-    res.send('not authorized')
+    res.status(401);
+    res.send('not authorized');
     return;
   }
   next()

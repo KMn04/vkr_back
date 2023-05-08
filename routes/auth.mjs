@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
     if(!user_login){
         const err = new Error("Такой пользователь не зарегистрирован");
         res.status(400);
-        res.send(err).status(400);
+        res.send(err);
     }
     const payload = {login: user_login.login};
     res.send({token: jwt.sign(payload, jwtConstants.secret )})
