@@ -14,7 +14,8 @@ router.post("/", async (req, res) => {
     if(user_login){
         const err = new Error("Такой пользователь уже зарегистрирован");
         err.status = 400;
-        res.send(err)
+        res.send(err).status(400);
+        return;
     }
     const user_email= await Users.findOne({
         where: {email: req.body.email}});
@@ -23,7 +24,8 @@ router.post("/", async (req, res) => {
     if(user_email){
         const err = new Error("Пользователь с такой почтой уже зарегистрирован");
         err.status = 400;
-        res.send(err)
+        res.send(err).status(400);
+        return;
     }
     //добавить пользователя с указанными логин/пароль
     const new_user = {

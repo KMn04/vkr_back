@@ -1,8 +1,12 @@
 import express from "express";
 import { Projects } from "../models/Projects.mjs";
 import { ProjectTeamMembers } from "../models/ProjectTeamMembers.mjs";
+import Sequelize from "sequelize";
+import tasks from './tasks.mjs';
 
 const router = express.Router();
+const { Op } = Sequelize.Op;
+
 
 // получить все проекты пользователя
 router.get("/", async (req, res) => {
@@ -31,14 +35,13 @@ router.get("/:userId", async (req, res) => {
     res.send(onlyUserProjects).status(200);
 });
 
-// получить только проекты, к которым у пользоавателя есть доступ
-router.get("/access", async (req, res) => {
+// получить только проекты, к которым у пользователя есть доступ
+router.get('/?roleCode=3', async (req, res) => {
     const userAccessProjects = await ProjectTeamMembers.findAll({
         where: {
             userId: req.body.user.userId,
-            // как
-            roleCode: !1, // not owner
-            finishedAt: null,
+            roleCode: {[Op.not]: req.params.roleCode}, // not owner
+            //finishedAt: null,
         },
         include: Projects,
         required: true
@@ -96,5 +99,7 @@ router.delete("/:projectId", async(req, res) => {
     }
     res.send().status(200);
 });
+
+router.use('/tasks', tasks);
 
 export default router
