@@ -28,7 +28,14 @@ router.get("/", async (req, res) => {
         include: Projects,
         required: true
     });
-    res.send(allUserProjects).status(200);
+    const preparedResult = allUserProjects.map((projectModel) => {
+        return {
+            ...projectModel.project.dataValues,
+            roleCode: projectModel.roleCode,
+            adminId: projectModel.adminId,
+        }
+    })
+    res.send(preparedResult).status(200);
 });
 
 // получить только проекты самого пользователя
