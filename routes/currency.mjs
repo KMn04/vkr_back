@@ -3,7 +3,8 @@ import { Currency } from "../models/Currency.mjs";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+// получить все валюты
+router.get("/currency", async (req, res) => {
     const allCurrencies = await Currency.findAll();
     res.send(allCurrencies).status(200);
 });
