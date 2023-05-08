@@ -110,7 +110,7 @@ router.put("/:projectId", async(req, res) => {
         const {ownerId, user, ...newBody} = req.body;
         await tempProject.update(newBody);
         const preparedResult = {
-                tempProject,
+                ...tempProject.dataValues,
                 roleCode: actualRole.roleCode
         };
         res.send(preparedResult).status(200);
@@ -154,6 +154,6 @@ router.delete("/:projectId", async(req, res) => {
     }
 });
 
-router.use('/:projectId/tasks', projectTasks);
+router.use('', projectTasks);
 
 export default router

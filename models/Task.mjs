@@ -60,3 +60,5 @@ Tasks.belongsTo(Users, {foreignKey: 'supervisorId'});
 Tasks.belongsTo(Users, {foreignKey: 'authorId'});
 Tasks.belongsTo(TaskStatus, {foreignKey: 'statusCode'});
 Tasks.belongsTo(TaskPriority, {foreignKey: 'priorityCode'});
+
+
