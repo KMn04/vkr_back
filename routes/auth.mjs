@@ -15,9 +15,8 @@ router.post("/", async (req, res) => {
     });
     //проверка по логину что пользователь есть
     if(!user_login){
-        const err = new Error("Такой пользователь не зарегистрирован");
-        res.status(400);
-        res.send(err);
+        res.status(401).send("Такой пользователь не зарегистрирован");
+        return;
     }
     const payload = {login: user_login.login};
     res.send({token: jwt.sign(payload, jwtConstants.secret )})

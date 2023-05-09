@@ -82,7 +82,7 @@ router.post("/:projectId/tasks", async (req, res) => {
             statusCode: 1,
             sumHoursFact: 0,
         });
-        res.send().status(200);
+        res.send(newTask).status(200);
     }
     else {
         const err = new Error("У вас нет прав доступа на создание задач");

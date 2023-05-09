@@ -3,6 +3,8 @@ import { Projects } from "../models/Projects.mjs";
 import { ProjectTeamMembers } from "../models/ProjectTeamMembers.mjs";
 import projectTasks from './projectTasks.mjs';
 import {Op} from 'sequelize'
+import { Roles } from "../models/Roles.mjs";
+import { Users } from "../models/Users.mjs";
 
 const router = express.Router();
 
@@ -123,6 +125,29 @@ router.put("/:projectId", async(req, res) => {
         res.send(err).status(400);
     }
 });
+
+// Получение команды проекта
+router.get("/:projectId/members", async (req, res) => {
+    const tempMembers = await ProjectTeamMembers.findAll({
+        where: {
+            projectId: req.params.projectId,
+            finishedAt: null,
+        },
+        include: [{
+            model: Users,
+            attributes: ["firstName", "secondName", "login", "userId"]
+        }, Roles],
+    })
+    const result = tempMembers.map((member) => {
+        return {
+            userId: member.dataValues.userId,
+            user: member.dataValues.user.dataValues,
+            roleCode: member.dataValues.roleCode,
+            roleName: member.dataValues.role.dataValues.name
+        }
+    })
+    res.send(result)
+})
 
 // удаление проекта
 router.delete("/:projectId", async(req, res) => {
