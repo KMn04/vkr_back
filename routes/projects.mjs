@@ -135,7 +135,7 @@ router.get("/:projectId/members", async (req, res) => {
         },
         include: [{
             model: Users,
-            attributes: ["firstName", "secondName", "login", "userId"]
+            attributes: ["firstName", "secondName", "login", "userId", "email"]
         }, Roles],
     })
     const result = tempMembers.map((member) => {
