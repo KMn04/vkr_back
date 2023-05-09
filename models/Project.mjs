@@ -1,11 +1,11 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
-import {Users} from "./Users.mjs";
+import {User} from "./User.mjs";
 import {ProjectStatus} from "./ProjectStatus.mjs";
 import {Currency} from "./Currency.mjs";
 
 
-export const Projects = sequelize.define('project', {
+export const Project = sequelize.define('project', {
     projectId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -46,6 +46,6 @@ export const Projects = sequelize.define('project', {
     }
 });
 
-Projects.belongsTo(Users, {foreignKey: "ownerId"});
-Projects.belongsTo(ProjectStatus, {foreignKey: "statusCode"});
-Projects.belongsTo(Currency, {foreignKey: "currencyCode"});
+Project.belongsTo(User, {foreignKey: "ownerId"});
+Project.belongsTo(ProjectStatus, {foreignKey: "statusCode"});
+Project.belongsTo(Currency, {foreignKey: "currencyCode"});

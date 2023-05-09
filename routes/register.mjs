@@ -1,5 +1,5 @@
 import express from "express";
-import { Users } from "../models/Users.mjs";
+import { User } from "../models/User.mjs";
 import jwt from 'jsonwebtoken'
 import {jwtConstants} from '../constants.mjs'
 
@@ -7,7 +7,7 @@ const router = express.Router();
 
 // регистрация
 router.post("/", async (req, res) => {
-    const user_login = await Users.findOne({
+    const user_login = await User.findOne({
         where: {login: req.body.login}});
     console.log(user_login)
     //проверка по логину что пользователя нет
@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
         res.send(err).status(400);
         return;
     }
-    const user_email= await Users.findOne({
+    const user_email= await User.findOne({
         where: {email: req.body.email}});
     console.log(user_email)
     //проверка что почта не использовалась ранее
@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
         secondName: req.body.secondName,
         email: req.body.email,
     };
-    const user = await Users.create(new_user)
+    const user = await User.create(new_user)
     const payload = {login: user.login};
     res.send({token: jwt.sign(payload, jwtConstants.secret )})
 });

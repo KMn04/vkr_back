@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { jwtConstants } from '../constants.mjs';
-import {Users} from '../models/Users.mjs'
+import {User} from '../models/User.mjs'
 
 export const checkJWTMiddleware = async (req, res, next) => {
   const token = req.headers?.authorization
@@ -11,7 +11,7 @@ export const checkJWTMiddleware = async (req, res, next) => {
   }
   try{
     const payload = jwt.verify(token, jwtConstants.secret);
-    const userLogin = await Users.findOne({
+    const userLogin = await User.findOne({
       where: {
         login: payload.login
       },

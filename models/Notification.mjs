@@ -1,13 +1,13 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
-import {Users} from "./Users.mjs";
+import {User} from "./User.mjs";
 import {NotificationType} from "./NotificationType.mjs";
 import {NotificationSubjectType} from "./NotificationSubjectType.mjs";
 import {NotificationFrequency} from "./NotificationFrequency.mjs";
 
 // ощущение что сущность надо перенести в монго, тк в зависимости от самого уведа у всех будут немного разные поля
  // ну или упростить
-export const Notifications = sequelize.define('notification', {
+export const Notification = sequelize.define('notification', {
     notificationId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -47,7 +47,7 @@ export const Notifications = sequelize.define('notification', {
     }
 });
 
-Notifications.belongsTo(Users, {foreignKey: "addressId"}); // ид адресата, хотя по факту тут нужен емейл
-Notifications.belongsTo(NotificationType, {foreignKey: "type"}); // тип распространения: все/только мои (проекты, задачи)
-Notifications.belongsTo(NotificationSubjectType, {foreignKey: "subjectType"}); // тип сущности
-Notifications.belongsTo(NotificationFrequency, {foreignKey: "frequency"}); // как часто присылать (только для общих)
+Notification.belongsTo(User, {foreignKey: "addressId"}); // ид адресата, хотя по факту тут нужен емейл
+Notification.belongsTo(NotificationType, {foreignKey: "type"}); // тип распространения: все/только мои (проекты, задачи)
+Notification.belongsTo(NotificationSubjectType, {foreignKey: "subjectType"}); // тип сущности
+Notification.belongsTo(NotificationFrequency, {foreignKey: "frequency"}); // как часто присылать (только для общих)

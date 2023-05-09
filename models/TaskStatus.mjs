@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 
-export const TaskStatus = sequelize.define('task_status', {
+export const TaskStatus = sequelize.define('taskStatus', {
     taskStatusCode: {
         type: Sequelize.INTEGER,
         primaryKey: true,

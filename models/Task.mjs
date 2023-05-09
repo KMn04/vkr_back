@@ -1,13 +1,13 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 import {TaskType} from "./TaskType.mjs";
-import {Projects} from "./Projects.mjs";
-import {Sprints} from "./Sprints.mjs";
-import {Users} from "./Users.mjs";
+import {Project} from "./Project.mjs";
+import {Sprint} from "./Sprint.mjs";
+import {User} from "./User.mjs";
 import {TaskStatus} from "./TaskStatus.mjs";
 import {TaskPriority} from "./TaskPriority.mjs";
 
-export const Tasks = sequelize.define('task', {
+export const Task = sequelize.define('task', {
     taskId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -52,13 +52,13 @@ export const Tasks = sequelize.define('task', {
     }
 });
 
-Tasks.belongsTo(TaskType, {foreignKey: 'typeCode'});
-Tasks.belongsTo(Projects, {foreignKey: 'projectId'});
-Tasks.belongsTo(Sprints, {foreignKey: 'sprintId'});
-Tasks.belongsTo(Users, {foreignKey: 'assigneeId'});
-Tasks.belongsTo(Users, {foreignKey: 'supervisorId'});
-Tasks.belongsTo(Users, {foreignKey: 'authorId'});
-Tasks.belongsTo(TaskStatus, {foreignKey: 'statusCode'});
-Tasks.belongsTo(TaskPriority, {foreignKey: 'priorityCode'});
+Task.belongsTo(TaskType, {foreignKey: 'typeCode'});
+Task.belongsTo(Project, {foreignKey: 'projectId'});
+Task.belongsTo(Sprint, {foreignKey: 'sprintId'});
+Task.belongsTo(User, {foreignKey: 'assigneeId'});
+Task.belongsTo(User, {foreignKey: 'supervisorId'});
+Task.belongsTo(User, {foreignKey: 'authorId'});
+Task.belongsTo(TaskStatus, {foreignKey: 'statusCode'});
+Task.belongsTo(TaskPriority, {foreignKey: 'priorityCode'});
 
 

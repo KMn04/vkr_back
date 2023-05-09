@@ -1,5 +1,5 @@
 import express from "express";
-import { Users } from "../models/Users.mjs";
+import { User } from "../models/User.mjs";
 import jwt from 'jsonwebtoken'
 import {jwtConstants} from '../constants.mjs'
 
@@ -7,7 +7,7 @@ const router = express.Router();
 
 // аутентификация + авторизация
 router.post("/", async (req, res) => {
-    const user_login = await Users.findOne({
+    const user_login = await User.findOne({
         where: {
             login: req.body.login,
             password: req.body.password

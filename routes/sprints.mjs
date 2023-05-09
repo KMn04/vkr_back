@@ -1,10 +1,11 @@
 import express from "express";
-import { Sprints } from "../models/Sprints.mjs";
+import { Sprint } from "../models/Sprint.mjs";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-    const allSprints = await Sprints.findAll();
+// получить все возможные значения
+router.get("/sprints", async (req, res) => {
+    const allSprints = await Sprint.findAll();
     res.send(allSprints).status(200);
 });
 

@@ -1,11 +1,11 @@
 import express from "express";
-import { Roles } from "../models/Roles.mjs";
+import { Role } from "../models/Role.mjs";
 
 const router = express.Router();
 
 // получить все возможные значения
 router.get("/roles", async (req, res) => {
-    const allRoles = await Roles.findAll();
+    const allRoles = await Role.findAll();
     res.send(allRoles).status(200);
 });
 

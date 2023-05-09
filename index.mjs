@@ -6,6 +6,7 @@ import register from './routes/register.mjs';
 import auth from './routes/auth.mjs';
 import projects from './routes/projects.mjs';
 import tasks from './routes/tasks.mjs';
+import users from './routes/users.mjs';
 
 export const app = express();
 const port = 3000
@@ -23,6 +24,8 @@ app.use("/projects", checkJWTMiddleware);
 app.use("/projects", projects);
 app.use("/tasks", checkJWTMiddleware);
 app.use("/tasks", tasks);
+app.use("/profile", checkJWTMiddleware);
+app.use("/profile", users);
 
 sequelize.sync().then(() => {
   app.listen(port, function(){

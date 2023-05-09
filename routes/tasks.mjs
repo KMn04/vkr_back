@@ -1,6 +1,6 @@
 import express from "express";
-import { Tasks } from "../models/Task.mjs";
-import {ProjectTeamMembers} from "../models/ProjectTeamMembers.mjs";
+import { Task } from "../models/Task.mjs";
+import {ProjectTeamMember} from "../models/ProjectTeamMember.mjs";
 import {Op} from "sequelize";
 
 const router = express.Router();
@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
             authorId: req.body.user.userId
         }
     }
-    const allUserTasks = await Tasks.findAll({
+    const allUserTasks = await Task.findAll({
         where: whereRequest,
         attributes: {
                 exclude: ['updatedAt', 'createdAt']
@@ -46,7 +46,7 @@ router.get("/", async (req, res) => {
 
 // получить задачу
 router.get('/:taskId', async (req, res) => {
-    const thisTask = await Tasks.findOne(
+    const thisTask = await Task.findOne(
         {
             where: {
                 taskId: req.params.taskId,
@@ -56,7 +56,7 @@ router.get('/:taskId', async (req, res) => {
             }
     });
     if (thisTask){
-        const actualRole = await ProjectTeamMembers.findOne({
+        const actualRole = await ProjectTeamMember.findOne({
             where: {
                 projectId: thisTask.projectId,
                 userId: req.body.user.userId,
@@ -81,7 +81,7 @@ router.get('/:taskId', async (req, res) => {
 
 // создать задачу
 router.post("/", async (req, res) => {
-    const actualRole = await ProjectTeamMembers.findOne({
+    const actualRole = await ProjectTeamMember.findOne({
         where: {
             projectId: req.body.projectId,
             userId: req.body.user.userId,
@@ -89,7 +89,7 @@ router.post("/", async (req, res) => {
         }
     });
     if (actualRole.roleCode < 4) {
-        const newTask = await Tasks.create({
+        const newTask = await Task.create({
             name: req.body.name,
             description: req.body.description,
             typeCode: req.body.typeCode,
@@ -112,7 +112,7 @@ router.post("/", async (req, res) => {
 
 // изменить информацию о задаче
 router.put('/:taskId', async(req, res) => {
-    const thisTask = await Tasks.findOne(
+    const thisTask = await Task.findOne(
         {
             where: {
                 taskId: req.params.taskId,
@@ -122,7 +122,7 @@ router.put('/:taskId', async(req, res) => {
             }
         });
     if (thisTask){
-        const actualRole = await ProjectTeamMembers.findOne({
+        const actualRole = await ProjectTeamMember.findOne({
             where: {
                 projectId: thisTask.projectId,
                 userId: req.body.user.userId,
@@ -149,7 +149,7 @@ router.put('/:taskId', async(req, res) => {
 
 // изменить статус задачи
 router.put('/:taskId/changeStatus', async(req, res) => {
-    const thisTask = await Tasks.findOne(
+    const thisTask = await Task.findOne(
         {
             where: {
                 taskId: req.params.taskId,
@@ -159,7 +159,7 @@ router.put('/:taskId/changeStatus', async(req, res) => {
             }
         });
     if (thisTask){
-        const actualRole = await ProjectTeamMembers.findOne({
+        const actualRole = await ProjectTeamMember.findOne({
             where: {
                 projectId: thisTask.projectId,
                 userId: req.body.user.userId,
@@ -185,7 +185,7 @@ router.put('/:taskId/changeStatus', async(req, res) => {
 
 // вписать часы по задаче
 router.put('/:taskId/reportTime', async(req, res) => {
-    const thisTask = await Tasks.findOne(
+    const thisTask = await Task.findOne(
         {
             where: {
                 taskId: req.params.taskId,
@@ -215,7 +215,7 @@ router.put('/:taskId/reportTime', async(req, res) => {
 
 // удалить задачу
 router.delete('/:taskId', async(req, res) => {
-    const thisTask = await Tasks.findOne(
+    const thisTask = await Task.findOne(
         {
             where: {
                 taskId: req.params.taskId,
@@ -225,7 +225,7 @@ router.delete('/:taskId', async(req, res) => {
             }
         });
     if (thisTask){
-        const actualRole = await ProjectTeamMembers.findOne({
+        const actualRole = await ProjectTeamMember.findOne({
             where: {
                 projectId: thisTask.projectId,
                 userId: req.body.user.userId,

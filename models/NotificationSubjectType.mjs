@@ -1,7 +1,7 @@
 import sequelize from "../db/postgre_connection.mjs";
 import Sequelize from "sequelize";
 
-export const NotificationSubjectType = sequelize.define('notification_subject_type', {
+export const NotificationSubjectType = sequelize.define('notificationSubjectType', {
     notificationSubjectTypeCode: {
         type: Sequelize.STRING,
         primaryKey: true,

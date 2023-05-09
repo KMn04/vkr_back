@@ -2,7 +2,7 @@ import sequelize from "../db/postgre_connection.mjs";
 import Sequelize from "sequelize";
 
 // только для общих уведомлений
-export const NotificationFrequency = sequelize.define('notification_frequency', {
+export const NotificationFrequency = sequelize.define('notificationFrequency', {
     notificationFrequencyCode: {
         type: Sequelize.STRING,
         primaryKey: true,

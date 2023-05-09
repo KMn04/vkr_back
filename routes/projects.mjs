@@ -1,10 +1,13 @@
 import express from "express";
-import { Projects } from "../models/Projects.mjs";
-import { ProjectTeamMembers } from "../models/ProjectTeamMembers.mjs";
+import { Project } from "../models/Project.mjs";
+import { ProjectTeamMember } from "../models/ProjectTeamMember.mjs";
 import projectTasks from './projectTasks.mjs';
+//import projectTeam from './projectTeam.mjs';
 import {Op} from 'sequelize'
-import { Roles } from "../models/Roles.mjs";
-import { Users } from "../models/Users.mjs";
+import { Role } from "../models/Role.mjs";
+import { User } from "../models/User.mjs";
+import ProjectStatus from "./projectStatus.mjs";
+import Currency from "./currency.mjs";
 
 const router = express.Router();
 
@@ -25,20 +28,25 @@ router.get("/", async (req, res) => {
             roleCode: excludeRoleCode
         }
     }
-    const allUserProjects = await ProjectTeamMembers.findAll({
+    const allUserProjects = await ProjectTeamMember.findAll({
         where: whereRequest,
-        include: [{
-            model: Projects,
-            attributes: {
-                exclude: ['updatedAt', 'createdAt']
+        include: [
+            {
+                model: Project,
+                attributes:['name', 'description']
+            },
+            {
+                model: Role,
+                attributes: ['name']
             }
-        }],
-        required: true
+        ]
     });
     const preparedResult = allUserProjects.map((projectModel) => {
         return {
-            ...projectModel.project.dataValues,
-            roleCode: projectModel.roleCode,
+            projectId: projectModel.dataValues.projectId,
+            name: projectModel.project.name,
+            description: projectModel.project.description,
+            role: projectModel.role.name
         }
     })
     res.send(preparedResult).status(200);
@@ -46,7 +54,7 @@ router.get("/", async (req, res) => {
 
 // получить проект
 router.get("/:projectId", async (req, res) => {
-    const actualRole = await ProjectTeamMembers.findOne({
+    const actualRole = await ProjectTeamMember.findOne({
         where: {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
@@ -54,18 +62,49 @@ router.get("/:projectId", async (req, res) => {
         }
     });
     if (actualRole) {
-        const tempProject = await Projects.findOne(
+        const tempProject = await Project.findOne(
             {
                 where: {
                     projectId: req.params.projectId,
                     deletedAt: null},
-                attributes: {
-                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
-                }
+                include: [
+                    {
+                        model: User,
+                        attributes:['firstName', 'secondName']
+                    }/*,
+                    {
+                        model: ProjectStatus,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Currency,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Role,
+                        attributes: ['name']
+                    }*/
+                ]
         })
         const preparedResult = {
-                ...tempProject.dataValues,
-                roleCode: actualRole.roleCode,
+            ...tempProject.dataValues,
+            /*projectId: tempProject.dataValues.projectId,
+            name: tempProject.dataValues.name,
+            description: tempProject.dataValues.description,
+            dateStart: tempProject.dataValues.dateStart,
+            dateFinish: tempProject.dataValues.dateFinish,
+            budget: tempProject.dataValues.budget,
+            sumHoursPlan: tempProject.dataValues.sumHoursPlan,
+            sumHoursFact: tempProject.dataValues.sumHoursFact,
+            ownerId: tempProject.dataValues.ownerId,
+            ownerName: tempProject.user.firstName,
+            ownerSecondName: tempProject.user.secondName,
+            statusCode: tempProject.dataValues.statusCode,
+            status: tempProject.projectStatusCode.name,
+            currencyCode: tempProject.dataValues.currencyCode,
+            currency: tempProject.currency.name,
+            roleCode: actualRole.roleCode,
+            role: tempProject.role.name*/
         }
         res.send(preparedResult).status(200);
     }
@@ -78,13 +117,13 @@ router.get("/:projectId", async (req, res) => {
 
 // создать проект
 router.post("/", async (req, res) => {
-    const newProject = await Projects.create({
+    const newProject = await Project.create({
         name: req.body.name,
         description: req.body.description,
         ownerId: req.body.user.userId,
         statusCode: 1 // новый/не начато
     });
-    await ProjectTeamMembers.create({
+    await ProjectTeamMember.create({
         startedAt: Date.now(),
         projectId: newProject.projectId,
         adminId: req.body.user.userId,
@@ -96,7 +135,7 @@ router.post("/", async (req, res) => {
 
 // изменение проекта
 router.put("/:projectId", async(req, res) => {
-    const actualRole = await ProjectTeamMembers.findOne({
+    const actualRole = await ProjectTeamMember.findOne({
         where: {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
@@ -104,7 +143,7 @@ router.put("/:projectId", async(req, res) => {
         }
     });
     if (actualRole.roleCode < 3) {
-        const tempProject = await Projects.findOne(
+        const tempProject = await Project.findOne(
             {
                 where: {
                     projectId: req.params.projectId,
@@ -128,32 +167,9 @@ router.put("/:projectId", async(req, res) => {
     }
 });
 
-// Получение команды проекта
-router.get("/:projectId/members", async (req, res) => {
-    const tempMembers = await ProjectTeamMembers.findAll({
-        where: {
-            projectId: req.params.projectId,
-            finishedAt: null,
-        },
-        include: [{
-            model: Users,
-            attributes: ["firstName", "secondName", "login", "userId", "email"]
-        }, Roles],
-    })
-    const result = tempMembers.map((member) => {
-        return {
-            userId: member.dataValues.userId,
-            user: member.dataValues.user.dataValues,
-            roleCode: member.dataValues.roleCode,
-            roleName: member.dataValues.role.dataValues.name
-        }
-    })
-    res.send(result)
-})
-
 // удаление проекта
 router.delete("/:projectId", async(req, res) => {
-    const actualRole = await ProjectTeamMembers.findOne({
+    const actualRole = await ProjectTeamMember.findOne({
         where: {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
@@ -161,7 +177,7 @@ router.delete("/:projectId", async(req, res) => {
         }
     });
     if (actualRole.roleCode === 1) {
-        const tempProject = await Projects.findOne(
+        const tempProject = await Project.findOne(
             {
                 where: {
                     projectId: req.params.projectId,
@@ -171,7 +187,7 @@ router.delete("/:projectId", async(req, res) => {
                 }
             })
         await tempProject.update({ deletedAt: Date.now() });
-        const projectTeam = await ProjectTeamMembers.findAll({
+        const projectTeam = await ProjectTeamMember.findAll({
             where: {
                 projectId: req.params.projectId,
             }
@@ -189,5 +205,6 @@ router.delete("/:projectId", async(req, res) => {
 });
 
 router.use('', projectTasks);
+//router.use('', projectTeam);
 
 export default router

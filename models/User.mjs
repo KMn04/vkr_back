@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 
-export const Users = sequelize.define('user', {
+export const User = sequelize.define('user', {
     userId: {
       type: Sequelize.INTEGER,
       autoIncrement: true,

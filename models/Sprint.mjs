@@ -1,9 +1,10 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 
-export const Roles = sequelize.define('role', {
-    roleCode: {
+export const Sprint = sequelize.define('sprint', {
+    sprintId: {
         type: Sequelize.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
         allowNull: false
     },
@@ -13,6 +14,14 @@ export const Roles = sequelize.define('role', {
     },
     description: {
         type: Sequelize.STRING,
+        allowNull: true
+    },
+    dateStart: {
+        type: Sequelize.DATE,
+        allowNull: false
+    },
+    dateFinish: {
+        type: Sequelize.DATE,
         allowNull: false
     }
 })
