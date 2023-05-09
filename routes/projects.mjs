@@ -1,12 +1,13 @@
 import express from "express";
 import { Project } from "../models/Project.mjs";
 import { ProjectTeamMember } from "../models/ProjectTeamMember.mjs";
-import projectTasks from './projectTasks.mjs';
-import {Op} from 'sequelize'
 import { Role } from "../models/Role.mjs";
 import { User } from "../models/User.mjs";
-import ProjectStatus from "../models/ProjectStatus.mjs";
-import Currency from "../models/Currency.mjs";
+import { ProjectStatus}  from "../models/ProjectStatus.mjs";
+import { Currency } from "../models/Currency.mjs";
+import {Op} from 'sequelize'
+import projectTasks from './projectTasks.mjs';
+import projectTeam from './projectTeam.mjs';
 
 const router = express.Router();
 

@@ -5,9 +5,9 @@
 
 
 import router from "./projects.mjs";
-import {ProjectTeamMember} from "../models/ProjectTeamMember.mjs";
-import {User} from "../models/User.mjs";
-import {Role} from "../models/Role.mjs";
+import { ProjectTeamMember } from "../models/ProjectTeamMember.mjs";
+import { User } from "../models/User.mjs";
+import { Role } from "../models/Role.mjs";
 
 router.get("/:projectId/members", async (req, res) => {
     const tempMembers = await ProjectTeamMember.findAll({

@@ -4,7 +4,7 @@ import {Project} from "./Project.mjs";
 import {User} from "./User.mjs";
 import {Role} from "./Role.mjs";
 
-export const ProjectTeamMember = sequelize.define('project_team_member', {
+export const ProjectTeamMember = sequelize.define('projectTeamMember', {
     projectTeamMemberId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

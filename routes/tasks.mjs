@@ -1,6 +1,6 @@
 import express from "express";
 import { Task } from "../models/Task.mjs";
-import {ProjectTeamMember} from "../models/ProjectTeamMember.mjs";
+import { ProjectTeamMember } from "../models/ProjectTeamMember.mjs";
 import {Op} from "sequelize";
 
 const router = express.Router();
