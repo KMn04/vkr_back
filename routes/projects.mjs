@@ -2,12 +2,11 @@ import express from "express";
 import { Project } from "../models/Project.mjs";
 import { ProjectTeamMember } from "../models/ProjectTeamMember.mjs";
 import projectTasks from './projectTasks.mjs';
-//import projectTeam from './projectTeam.mjs';
 import {Op} from 'sequelize'
 import { Role } from "../models/Role.mjs";
 import { User } from "../models/User.mjs";
-import ProjectStatus from "./projectStatus.mjs";
-import Currency from "./currency.mjs";
+import ProjectStatus from "../models/ProjectStatus.mjs";
+import Currency from "../models/Currency.mjs";
 
 const router = express.Router();
 
@@ -71,7 +70,7 @@ router.get("/:projectId", async (req, res) => {
                     {
                         model: User,
                         attributes:['firstName', 'secondName']
-                    }/*,
+                    },
                     {
                         model: ProjectStatus,
                         attributes: ['name']
@@ -83,7 +82,7 @@ router.get("/:projectId", async (req, res) => {
                     {
                         model: Role,
                         attributes: ['name']
-                    }*/
+                    }
                 ]
         })
         const preparedResult = {
@@ -205,6 +204,6 @@ router.delete("/:projectId", async(req, res) => {
 });
 
 router.use('', projectTasks);
-//router.use('', projectTeam);
+router.use('', projectTeam);
 
 export default router
