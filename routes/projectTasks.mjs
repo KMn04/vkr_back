@@ -43,12 +43,13 @@ router.get("/:projectId/tasks/:taskId", async (req, res) => {
         }
     });
     if (actualRole) {
-        const task = await Tasks.findByPk(
-            req.params.taskId,
+        const task = await Tasks.findOne(
             {
-                where: {deletedAt: null},
+                where: {
+                    taskId: req.params.taskId,
+                    deletedAt: null},
                 attributes: {
-                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
+                    exclude: ['createdAt', 'updatedAt']
                 }
         })
         res.send(task).status(200);
@@ -101,12 +102,13 @@ router.put("/:projectId/tasks/:taskId", async(req, res) => {
         }
     });
     if (actualRole.roleCode < 4) {
-        const tempTask = await Tasks.findByPk(
-            req.params.taskId,
+        const tempTask = await Tasks.findOne(
             {
-                where: {deletedAt: null},
+                where: {
+                    taskId: req.params.taskId,
+                    deletedAt: null},
                 attributes: {
-                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
+                    exclude: ['createdAt', 'updatedAt']
                 }
         });
         const {projectId, authorId, typeCode, ...newBody} = req.body;
@@ -129,12 +131,13 @@ router.put("/:projectId/tasks/:taskId/changeStatus", async(req, res) => {
             finishedAt: null
         }
     });
-    const thisTask = await Tasks.findByPk(
-        req.params.taskId,
+    const thisTask = await Tasks.findOne(
         {
-            where: {deletedAt: null},
+            where: {
+                taskId: req.params.taskId,
+                deletedAt: null},
             attributes: {
-                exclude: ['createdAt', 'deletedAt', 'updatedAt']
+                exclude: ['createdAt', 'updatedAt']
             }
     });
     if (actualRole.roleCode < 4 || thisTask.assigneeId === req.body.user.userId || thisTask.supervisorId === req.body.user.userId) {
@@ -150,12 +153,13 @@ router.put("/:projectId/tasks/:taskId/changeStatus", async(req, res) => {
 
 // вписать часы по задаче
 router.put("/:projectId/tasks/:taskId/reportTime", async(req, res) => {
-    const thisTask = await Tasks.findByPk(
-        req.params.taskId,
+    const thisTask = await Tasks.findOne(
         {
-            where: {deletedAt: null},
+            where: {
+                taskId: req.params.taskId,
+                deletedAt: null},
             attributes: {
-                exclude: ['createdAt', 'deletedAt', 'updatedAt']
+                exclude: ['createdAt', 'updatedAt']
             }
     });
     if (thisTask.assigneeId === req.body.user.userId) {
@@ -180,12 +184,13 @@ router.delete("/:projectId/tasks/:taskId", async(req, res) => {
         }
     });
     if (actualRole.roleCode < 4) {
-        const thisTask = await Tasks.findByPk(
-            req.params.taskId,
+        const thisTask = await Tasks.findOne(
             {
-                where: {deletedAt: null},
+                where: {
+                    taskId: req.params.taskId,
+                    deletedAt: null},
                 attributes: {
-                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
+                    exclude: ['createdAt', 'updatedAt']
                 }
         });
         await thisTask.update({ deletedAt: Date.now() });

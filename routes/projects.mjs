@@ -54,10 +54,11 @@ router.get("/:projectId", async (req, res) => {
         }
     });
     if (actualRole) {
-        const tempProject = await Projects.findByPk(
-            req.params.projectId,
+        const tempProject = await Projects.findOne(
             {
-                where: {deletedAt: null},
+                where: {
+                    projectId: req.params.projectId,
+                    deletedAt: null},
                 attributes: {
                     exclude: ['createdAt', 'deletedAt', 'updatedAt']
                 }
@@ -103,10 +104,11 @@ router.put("/:projectId", async(req, res) => {
         }
     });
     if (actualRole.roleCode < 3) {
-        const tempProject = await Projects.findByPk(
-            req.params.projectId,
+        const tempProject = await Projects.findOne(
             {
-                where: {deletedAt: null},
+                where: {
+                    projectId: req.params.projectId,
+                    deletedAt: null},
                 attributes: {
                     exclude: ['createdAt', 'deletedAt', 'updatedAt']
                 }
@@ -159,10 +161,11 @@ router.delete("/:projectId", async(req, res) => {
         }
     });
     if (actualRole.roleCode === 1) {
-        const tempProject = await Projects.findByPk(
-            req.params.projectId,
+        const tempProject = await Projects.findOne(
             {
-                where: {deletedAt: null},
+                where: {
+                    projectId: req.params.projectId,
+                    deletedAt: null},
                 attributes: {
                     exclude: ['createdAt', 'deletedAt', 'updatedAt']
                 }
