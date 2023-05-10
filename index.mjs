@@ -1,12 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import sequelize from './db/postgre_connection.mjs';
-import { checkJWTMiddleware } from './middlewares/checkJWTMiddleware.mjs';
-import register from './routes/register.mjs';
+import register from "./routes/register.mjs";
 import auth from './routes/auth.mjs';
+import { checkJWTMiddleware } from './middlewares/checkJWTMiddleware.mjs';
 import projects from './routes/projects.mjs';
 import tasks from './routes/tasks.mjs';
 import users from './routes/users.mjs';
+
 
 export const app = express();
 const port = 3000

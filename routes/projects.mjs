@@ -59,7 +59,13 @@ router.get("/:projectId", async (req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        }
+        },
+        include: [
+            {
+                model: Role,
+                attributes: ['name']
+            }
+        ]
     });
     if (actualRole) {
         const tempProject = await Project.findOne(
@@ -79,32 +85,27 @@ router.get("/:projectId", async (req, res) => {
                     {
                         model: Currency,
                         attributes: ['name']
-                    },
-                    {
-                        model: Role,
-                        attributes: ['name']
                     }
                 ]
         })
         const preparedResult = {
-            ...tempProject.dataValues,
-            /*projectId: tempProject.dataValues.projectId,
+            projectId: tempProject.dataValues.projectId,
             name: tempProject.dataValues.name,
             description: tempProject.dataValues.description,
             dateStart: tempProject.dataValues.dateStart,
             dateFinish: tempProject.dataValues.dateFinish,
             budget: tempProject.dataValues.budget,
+            currencyCode: tempProject.dataValues.currencyCode,
+            currency: tempProject.dataValues.currencyCode ? tempProject.currency.name : null,
             sumHoursPlan: tempProject.dataValues.sumHoursPlan,
             sumHoursFact: tempProject.dataValues.sumHoursFact,
             ownerId: tempProject.dataValues.ownerId,
             ownerName: tempProject.user.firstName,
             ownerSecondName: tempProject.user.secondName,
             statusCode: tempProject.dataValues.statusCode,
-            status: tempProject.projectStatusCode.name,
-            currencyCode: tempProject.dataValues.currencyCode,
-            currency: tempProject.currency.name,
+            status: tempProject.projectStatus.name,
             roleCode: actualRole.roleCode,
-            role: tempProject.role.name*/
+            role: actualRole.role.name
         }
         res.send(preparedResult).status(200);
     }
@@ -121,7 +122,8 @@ router.post("/", async (req, res) => {
         name: req.body.name,
         description: req.body.description,
         ownerId: req.body.user.userId,
-        statusCode: 1 // новый/не начато
+        sumHoursFact: 0,
+        statusCode: 1
     });
     await ProjectTeamMember.create({
         startedAt: Date.now(),
@@ -140,7 +142,13 @@ router.put("/:projectId", async(req, res) => {
             projectId: req.params.projectId,
             userId: req.body.user.userId,
             finishedAt: null
-        }
+        },
+        include: [
+            {
+                model: Role,
+                attributes: ['name']
+            }
+        ]
     });
     if (actualRole.roleCode < 3) {
         const tempProject = await Project.findOne(
@@ -148,15 +156,41 @@ router.put("/:projectId", async(req, res) => {
                 where: {
                     projectId: req.params.projectId,
                     deletedAt: null},
-                attributes: {
-                    exclude: ['createdAt', 'deletedAt', 'updatedAt']
-                }
+                include: [
+                    {
+                        model: User,
+                        attributes:['firstName', 'secondName']
+                    },
+                    {
+                        model: ProjectStatus,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Currency,
+                        attributes: ['name']
+                    }
+                ]
             })
         const {ownerId, user, ...newBody} = req.body;
         await tempProject.update(newBody);
         const preparedResult = {
-                ...tempProject.dataValues,
-                roleCode: actualRole.roleCode
+            projectId: tempProject.dataValues.projectId,
+            name: tempProject.dataValues.name,
+            description: tempProject.dataValues.description,
+            dateStart: tempProject.dataValues.dateStart,
+            dateFinish: tempProject.dataValues.dateFinish,
+            budget: tempProject.dataValues.budget,
+            currencyCode: tempProject.dataValues.currencyCode,
+            currency: tempProject.dataValues.currencyCode ? tempProject.currency.name : null,
+            sumHoursPlan: tempProject.dataValues.sumHoursPlan,
+            sumHoursFact: tempProject.dataValues.sumHoursFact,
+            ownerId: tempProject.dataValues.ownerId,
+            ownerName: tempProject.user.firstName,
+            ownerSecondName: tempProject.user.secondName,
+            statusCode: tempProject.dataValues.statusCode,
+            status: tempProject.projectStatus.name,
+            roleCode: actualRole.roleCode,
+            role: actualRole.role.name
         };
         res.send(preparedResult).status(200);
     }

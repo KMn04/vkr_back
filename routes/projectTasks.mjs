@@ -1,8 +1,17 @@
 import express from "express";
 import { Task } from "../models/Task.mjs";
 import { ProjectTeamMember } from "../models/ProjectTeamMember.mjs";
+import {Role} from "../models/Role.mjs";
+import {TaskType} from "../models/TaskType.mjs";
+import {Project} from "../models/Project.mjs";
+import {Sprint} from "../models/Sprint.mjs";
+import {User} from "../models/User.mjs";
+import {TaskStatus} from "../models/TaskStatus.mjs";
+import {TaskPriority} from "../models/TaskPriority.mjs";
+import {Op} from 'sequelize'
 
 const router = express.Router();
+
 
 // получить все задачи на проекте
 router.get("/:projectId/tasks", async (req, res) => {
@@ -23,8 +32,29 @@ router.get("/:projectId/tasks", async (req, res) => {
                 ['statusCode', 'ASC'],
                 ['priorityCode', 'ASC'],
             ],
+            include: [
+                {
+                    model: TaskStatus,
+                    attributes: ['name']
+                },
+                {
+                    model: TaskPriority,
+                    attributes: ['name']
+                }
+            ]
         });
-        res.send(allProjectTasks).status(200);
+        const preparedResult = allProjectTasks.map((taskModel) => {
+            return {
+                taskId: taskModel.dataValues.taskId,
+                name: taskModel.dataValues.name,
+                description: taskModel.dataValues.description,
+                statusCode: taskModel.dataValues.statusCode,
+                status: taskModel.taskStatus.name,
+                priorityCode: taskModel.dataValues.priorityCode,
+                priority: taskModel.taskPriority.name
+            }
+        })
+        res.send(preparedResult).status(200);
     }
     else {
         const err = new Error("У вас нет доступа к задачам этого проекта");
@@ -47,12 +77,72 @@ router.get("/:projectId/tasks/:taskId", async (req, res) => {
             {
                 where: {
                     taskId: req.params.taskId,
-                    deletedAt: null},
-                attributes: {
-                    exclude: ['createdAt', 'updatedAt']
-                }
+                    deletedAt: null
+                },
+                include: [
+                    {
+                        model: TaskStatus,
+                        attributes: ['name']
+                    },
+                    {
+                        model: TaskPriority,
+                        attributes: ['name']
+                    },
+                    {
+                        model: TaskType,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Project,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Sprint,
+                        attributes: ['name']
+                    }
+                ]
         })
-        res.send(task).status(200);
+        const author = await User.findOne({
+            where: {userId: task.dataValues.authorId},
+            attributes: ['firstName', 'secondName']
+        });
+        const assignee = await User.findOne({
+            where: {userId: task.dataValues.assigneeId},
+            attributes: ['firstName', 'secondName']
+        });
+        const supervisor = await User.findOne({
+            where: {userId: task.dataValues.supervisorId},
+            attributes: ['firstName', 'secondName']
+        });
+        const preparedResult = {
+            taskId: task.dataValues.taskId,
+            name: task.dataValues.name,
+            description: task.dataValues.description,
+            typeCode: task.dataValues.typeCode,
+            type: task.taskType.name,
+            statusCode: task.dataValues.statusCode,
+            status: task.taskStatus.name,
+            priorityCode: task.dataValues.priorityCode,
+            priority: task.taskPriority.name,
+            projectId: task.dataValues.projectId,
+            project: task.project.name,
+            sprintId: task.dataValues.sprintId,
+            sprint: task.dataValues.sprintId ? task.sprint.name : null,
+            dateStartPlan: task.dataValues.dateStartPlan,
+            dateStartFact: task.dataValues.dateStartFact,
+            dateFinishPlan: task.dataValues.dateFinishPlan,
+            dateFinishFact: task.dataValues.dateFinishFact,
+            sumHoursPlan: task.dataValues.sumHoursPlan,
+            sumHoursFact: task.dataValues.sumHoursFact,
+            assigneeId: task.dataValues.assigneeId,
+            assignee: assignee.dataValues.firstName + " " + assignee.dataValues.secondName,
+            supervisorId: task.dataValues.supervisorId,
+            supervisor: supervisor.dataValues.firstName + " " + supervisor.dataValues.secondName,
+            authorId: task.dataValues.authorId,
+            author: author.dataValues.firstName + " " + author.dataValues.secondName,
+            roleCode: actualRole.roleCode
+        }
+        res.send(preparedResult).status(200);
     }
     else {
         const err = new Error("У вас нет доступа к этой задаче");
@@ -83,7 +173,7 @@ router.post("/:projectId/tasks", async (req, res) => {
             statusCode: 1,
             sumHoursFact: 0,
         });
-        res.send(newTask).status(200);
+        res.send().status(200);
     }
     else {
         const err = new Error("У вас нет прав доступа на создание задач");
@@ -113,7 +203,76 @@ router.put("/:projectId/tasks/:taskId", async(req, res) => {
         });
         const {projectId, authorId, typeCode, ...newBody} = req.body;
         await tempTask.update(newBody);
-        res.send(tempTask).status(200);
+        const task = await Task.findOne(
+            {
+                where: {
+                    taskId: tempTask.dataValues.taskId,
+                    deletedAt: null
+                },
+                include: [
+                    {
+                        model: TaskStatus,
+                        attributes: ['name']
+                    },
+                    {
+                        model: TaskPriority,
+                        attributes: ['name']
+                    },
+                    {
+                        model: TaskType,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Project,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Sprint,
+                        attributes: ['name']
+                    }
+                ]
+            })
+        const author = await User.findOne({
+            where: {userId: task.dataValues.authorId},
+            attributes: ['firstName', 'secondName']
+        });
+        const assignee = await User.findOne({
+            where: {userId: task.dataValues.assigneeId},
+            attributes: ['firstName', 'secondName']
+        });
+        const supervisor = await User.findOne({
+            where: {userId: task.dataValues.supervisorId},
+            attributes: ['firstName', 'secondName']
+        });
+        const preparedResult = {
+            taskId: task.dataValues.taskId,
+            name: task.dataValues.name,
+            description: task.dataValues.description,
+            typeCode: task.dataValues.typeCode,
+            type: task.taskType.name,
+            statusCode: task.dataValues.statusCode,
+            status: task.taskStatus.name,
+            priorityCode: task.dataValues.priorityCode,
+            priority: task.taskPriority.name,
+            projectId: task.dataValues.projectId,
+            project: task.project.name,
+            sprintId: task.dataValues.sprintId,
+            sprint: task.dataValues.sprintId ? task.sprint.name : null,
+            dateStartPlan: task.dataValues.dateStartPlan,
+            dateStartFact: task.dataValues.dateStartFact,
+            dateFinishPlan: task.dataValues.dateFinishPlan,
+            dateFinishFact: task.dataValues.dateFinishFact,
+            sumHoursPlan: task.dataValues.sumHoursPlan,
+            sumHoursFact: task.dataValues.sumHoursFact,
+            assigneeId: task.dataValues.assigneeId,
+            assignee: assignee.dataValues.firstName + " " + assignee.dataValues.secondName,
+            supervisorId: task.dataValues.supervisorId,
+            supervisor: supervisor.dataValues.firstName + " " + supervisor.dataValues.secondName,
+            authorId: task.dataValues.authorId,
+            author: author.dataValues.firstName + " " + author.dataValues.secondName,
+            roleCode: actualRole.roleCode
+        }
+        res.send(preparedResult).status(200);
     }
     else {
         const err = new Error("У вас нет прав доступа на изменение этой задачи");
@@ -142,7 +301,76 @@ router.put("/:projectId/tasks/:taskId/changeStatus", async(req, res) => {
     });
     if (actualRole.roleCode < 4 || thisTask.assigneeId === req.body.user.userId || thisTask.supervisorId === req.body.user.userId) {
         await thisTask.update({ statusCode: req.body.statusCode });
-        res.send(thisTask).status(200);
+        const task = await Task.findOne(
+            {
+                where: {
+                    taskId: thisTask.dataValues.taskId,
+                    deletedAt: null
+                },
+                include: [
+                    {
+                        model: TaskStatus,
+                        attributes: ['name']
+                    },
+                    {
+                        model: TaskPriority,
+                        attributes: ['name']
+                    },
+                    {
+                        model: TaskType,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Project,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Sprint,
+                        attributes: ['name']
+                    }
+                ]
+            })
+        const author = await User.findOne({
+            where: {userId: task.dataValues.authorId},
+            attributes: ['firstName', 'secondName']
+        });
+        const assignee = await User.findOne({
+            where: {userId: task.dataValues.assigneeId},
+            attributes: ['firstName', 'secondName']
+        });
+        const supervisor = await User.findOne({
+            where: {userId: task.dataValues.supervisorId},
+            attributes: ['firstName', 'secondName']
+        });
+        const preparedResult = {
+            taskId: task.dataValues.taskId,
+            name: task.dataValues.name,
+            description: task.dataValues.description,
+            typeCode: task.dataValues.typeCode,
+            type: task.taskType.name,
+            statusCode: task.dataValues.statusCode,
+            status: task.taskStatus.name,
+            priorityCode: task.dataValues.priorityCode,
+            priority: task.taskPriority.name,
+            projectId: task.dataValues.projectId,
+            project: task.project.name,
+            sprintId: task.dataValues.sprintId,
+            sprint: task.dataValues.sprintId ? task.sprint.name : null,
+            dateStartPlan: task.dataValues.dateStartPlan,
+            dateStartFact: task.dataValues.dateStartFact,
+            dateFinishPlan: task.dataValues.dateFinishPlan,
+            dateFinishFact: task.dataValues.dateFinishFact,
+            sumHoursPlan: task.dataValues.sumHoursPlan,
+            sumHoursFact: task.dataValues.sumHoursFact,
+            assigneeId: task.dataValues.assigneeId,
+            assignee: assignee.dataValues.firstName + " " + assignee.dataValues.secondName,
+            supervisorId: task.dataValues.supervisorId,
+            supervisor: supervisor.dataValues.firstName + " " + supervisor.dataValues.secondName,
+            authorId: task.dataValues.authorId,
+            author: author.dataValues.firstName + " " + author.dataValues.secondName,
+            roleCode: actualRole.roleCode
+        }
+        res.send(preparedResult).status(200);
     }
     else {
         const err = new Error("У вас нет прав доступа на изменение статуса этой задачи");
@@ -165,7 +393,75 @@ router.put("/:projectId/tasks/:taskId/reportTime", async(req, res) => {
     if (thisTask.assigneeId === req.body.user.userId) {
         const sumTime = +thisTask.sumHoursFact + +req.body.sumHoursFact;
         await thisTask.update({ sumHoursFact: sumTime });
-        res.send(thisTask).status(200);
+        const task = await Task.findOne(
+            {
+                where: {
+                    taskId: thisTask.dataValues.taskId,
+                    deletedAt: null
+                },
+                include: [
+                    {
+                        model: TaskStatus,
+                        attributes: ['name']
+                    },
+                    {
+                        model: TaskPriority,
+                        attributes: ['name']
+                    },
+                    {
+                        model: TaskType,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Project,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Sprint,
+                        attributes: ['name']
+                    }
+                ]
+            })
+        const author = await User.findOne({
+            where: {userId: task.dataValues.authorId},
+            attributes: ['firstName', 'secondName']
+        });
+        const assignee = await User.findOne({
+            where: {userId: task.dataValues.assigneeId},
+            attributes: ['firstName', 'secondName']
+        });
+        const supervisor = await User.findOne({
+            where: {userId: task.dataValues.supervisorId},
+            attributes: ['firstName', 'secondName']
+        });
+        const preparedResult = {
+            taskId: task.dataValues.taskId,
+            name: task.dataValues.name,
+            description: task.dataValues.description,
+            typeCode: task.dataValues.typeCode,
+            type: task.taskType.name,
+            statusCode: task.dataValues.statusCode,
+            status: task.taskStatus.name,
+            priorityCode: task.dataValues.priorityCode,
+            priority: task.taskPriority.name,
+            projectId: task.dataValues.projectId,
+            project: task.project.name,
+            sprintId: task.dataValues.sprintId,
+            sprint: task.dataValues.sprintId ? task.sprint.name : null,
+            dateStartPlan: task.dataValues.dateStartPlan,
+            dateStartFact: task.dataValues.dateStartFact,
+            dateFinishPlan: task.dataValues.dateFinishPlan,
+            dateFinishFact: task.dataValues.dateFinishFact,
+            sumHoursPlan: task.dataValues.sumHoursPlan,
+            sumHoursFact: task.dataValues.sumHoursFact,
+            assigneeId: task.dataValues.assigneeId,
+            assignee: assignee.dataValues.firstName + " " + assignee.dataValues.secondName,
+            supervisorId: task.dataValues.supervisorId,
+            supervisor: supervisor.dataValues.firstName + " " + supervisor.dataValues.secondName,
+            authorId: task.dataValues.authorId,
+            author: author.dataValues.firstName + " " + author.dataValues.secondName
+        }
+        res.send(preparedResult).status(200);
     }
     else {
         const err = new Error("У вас нет прав доступа на списание времени по этой задаче");
