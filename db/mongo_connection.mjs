@@ -1,18 +1,8 @@
-import { MongoClient } from "mongodb";
+import Mongoose from 'mongoose'
 
-const connectionString = 'mongodb://localhost:27017';
+const mongoose = await Mongoose.connect('mongodb://localhost:27017')
+    .catch(error => console.log(error));
 
-const client = new MongoClient(connectionString);
+console.log('Mongo is connected');
 
-let conn;
-
-try {
-  conn = await client.connect();
-} catch(e) {
-  console.error(e);
-}
-
-
-let db = conn.db("local");
-
-export default db;
+export default mongoose

@@ -3,12 +3,13 @@
 
 // Получение команды проекта
 
-
-import router from "./projects.mjs";
+import express from "express";
 import { ProjectTeamMember } from "../models/ProjectTeamMember.mjs";
 import { User } from "../models/User.mjs";
 import { Role } from "../models/Role.mjs";
 
+
+const router = express.Router();
 router.get("/:projectId/members", async (req, res) => {
     const tempMembers = await ProjectTeamMember.findAll({
         where: {

@@ -3,7 +3,7 @@ import Mongoose from 'mongoose';
 
 const { Schema } = Mongoose;
 
-const notificationSchema = new Schema({
+const wikiPageSchema = new Schema({
     notificationId: Mongoose.ObjectId,
     subject: {
         id: Number, // ид сущности
@@ -17,4 +17,4 @@ const notificationSchema = new Schema({
     }
 });
 
-export const Notification = Mongoose.model('notification', notificationSchema);
+export const WikiPage = Mongoose.model('wikipage', wikiPageSchema);
