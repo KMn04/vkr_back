@@ -11,7 +11,7 @@ export const ProjectTeamMember = sequelize.define('projectTeamMember', {
         primaryKey: true,
         allowNull: false
     },
-    startedAt: {
+    updatedAt: {
         type: Sequelize.DATE,
         allowNull: true
     },

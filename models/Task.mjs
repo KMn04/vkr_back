@@ -2,7 +2,6 @@ import Sequelize from "sequelize";
 import sequelize from "../db/postgre_connection.mjs";
 import {TaskType} from "./TaskType.mjs";
 import {Project} from "./Project.mjs";
-import {Sprint} from "./Sprint.mjs";
 import {User} from "./User.mjs";
 import {TaskStatus} from "./TaskStatus.mjs";
 import {TaskPriority} from "./TaskPriority.mjs";
@@ -54,7 +53,6 @@ export const Task = sequelize.define('task', {
 
 Task.belongsTo(TaskType, {foreignKey: 'typeCode'});
 Task.belongsTo(Project, {foreignKey: 'projectId'});
-Task.belongsTo(Sprint, {foreignKey: 'sprintId'});
 Task.belongsTo(User, {foreignKey: 'assigneeId'});
 Task.belongsTo(User, {foreignKey: 'supervisorId'});
 Task.belongsTo(User, {foreignKey: 'authorId'});

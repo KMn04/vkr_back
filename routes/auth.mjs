@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
         res.status(401).send("Такой пользователь не зарегистрирован");
         return;
     }
+    // добавить вывод ошибки, что пароль неверный
     const payload = {login: user_login.login};
     res.send({token: jwt.sign(payload, jwtConstants.secret )})
 });
