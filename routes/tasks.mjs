@@ -6,7 +6,6 @@ import {TaskStatus} from "../models/TaskStatus.mjs";
 import {TaskPriority} from "../models/TaskPriority.mjs";
 import {TaskType} from "../models/TaskType.mjs";
 import {Project} from "../models/Project.mjs";
-import {Sprint} from "../models/Sprint.mjs";
 import {User} from "../models/User.mjs";
 
 const router = express.Router();
@@ -97,10 +96,6 @@ router.get('/:taskId', async (req, res) => {
                 {
                     model: Project,
                     attributes: ['name']
-                },
-                {
-                    model: Sprint,
-                    attributes: ['name']
                 }
             ]
     });
@@ -137,8 +132,6 @@ router.get('/:taskId', async (req, res) => {
                 priority: task.taskPriority.name,
                 projectId: task.dataValues.projectId,
                 project: task.project.name,
-                sprintId: task.dataValues.sprintId,
-                sprint: task.dataValues.sprintId ? task.sprint.name : null,
                 dateStartPlan: task.dataValues.dateStartPlan,
                 dateStartFact: task.dataValues.dateStartFact,
                 dateFinishPlan: task.dataValues.dateFinishPlan,
@@ -241,10 +234,6 @@ router.put('/:taskId', async(req, res) => {
                         {
                             model: Project,
                             attributes: ['name']
-                        },
-                        {
-                            model: Sprint,
-                            attributes: ['name']
                         }
                     ]
                 });
@@ -272,8 +261,6 @@ router.put('/:taskId', async(req, res) => {
                 priority: task.taskPriority.name,
                 projectId: task.dataValues.projectId,
                 project: task.project.name,
-                sprintId: task.dataValues.sprintId,
-                sprint: task.dataValues.sprintId ? task.sprint.name : null,
                 dateStartPlan: task.dataValues.dateStartPlan,
                 dateStartFact: task.dataValues.dateStartFact,
                 dateFinishPlan: task.dataValues.dateFinishPlan,
@@ -342,10 +329,6 @@ router.put('/:taskId/changeStatus', async(req, res) => {
                         {
                             model: Project,
                             attributes: ['name']
-                        },
-                        {
-                            model: Sprint,
-                            attributes: ['name']
                         }
                     ]
             })
@@ -373,8 +356,6 @@ router.put('/:taskId/changeStatus', async(req, res) => {
                 priority: task.taskPriority.name,
                 projectId: task.dataValues.projectId,
                 project: task.project.name,
-                sprintId: task.dataValues.sprintId,
-                sprint: task.dataValues.sprintId ? task.sprint.name : null,
                 dateStartPlan: task.dataValues.dateStartPlan,
                 dateStartFact: task.dataValues.dateStartFact,
                 dateFinishPlan: task.dataValues.dateFinishPlan,
@@ -429,10 +410,6 @@ router.put('/:taskId/reportTime', async(req, res) => {
                 {
                     model: Project,
                     attributes: ['name']
-                },
-                {
-                    model: Sprint,
-                    attributes: ['name']
                 }
             ]
         });
@@ -464,8 +441,6 @@ router.put('/:taskId/reportTime', async(req, res) => {
                 priority: task.taskPriority.name,
                 projectId: task.dataValues.projectId,
                 project: task.project.name,
-                sprintId: task.dataValues.sprintId,
-                sprint: task.dataValues.sprintId ? task.sprint.name : null,
                 dateStartPlan: task.dataValues.dateStartPlan,
                 dateStartFact: task.dataValues.dateStartFact,
                 dateFinishPlan: task.dataValues.dateFinishPlan,
