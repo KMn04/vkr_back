@@ -108,7 +108,7 @@ router.post("/:projectId/team", async (req, res) => {
 });
 
 // изменить роль участника на проекте
-router.put("/:projectId/team/:userId", async(req, res) => {
+router.put("/:projectId/team/:projectTeamMemberId", async(req, res) => {
     const actualRole = await ProjectTeamMember.findOne({
         where: {
             projectId: req.params.projectId,
@@ -120,14 +120,21 @@ router.put("/:projectId/team/:userId", async(req, res) => {
         // добавить проверку, что пытаются поменять не роль владельца
         const member = await ProjectTeamMember.findOne({
             where:{
-                userId: req.params.userId,
+                projectTeamMemberId: req.params.projectTeamMemberId,
                 finishedAt: null
             }
         });
-        await member.update({
-            updatedAt: Date.now(),
-            roleCode: req.body.roleCode,
-        });
+        if (member) {
+            await member.update({
+                updatedAt: Date.now(),
+                roleCode: req.body.roleCode,
+            });
+        }
+        else {
+            const err = new Error("Такого участника на проекте нет");
+            res.status(400);
+            res.send(err).status(400);
+        }
         res.send(member).status(200);
     }
     else {
@@ -138,7 +145,7 @@ router.put("/:projectId/team/:userId", async(req, res) => {
 });
 
 // удалить участника с проекта
-router.delete("/:projectId/team/:userId", async(req, res) => {
+router.delete("/:projectId/team/:projectTeamMemberId", async(req, res) => {
     const actualRole = await ProjectTeamMember.findOne({
         where: {
             projectId: req.params.projectId,
@@ -150,14 +157,21 @@ router.delete("/:projectId/team/:userId", async(req, res) => {
         // добавить проверку, что пытаются удалить не владельца, и что админа удаляет владелец
         const deletedMember = await ProjectTeamMember.findOne({
             where:{
-                userId: req.params.userId,
+                projectTeamMemberId: req.params.projectTeamMemberId,
                 finishedAt: null
             }
         });
-        await deletedMember.update({
-            updatedAt: Date.now(),
-            finishedAt: Date.now(),
-        });
+        if (deletedMember) {
+            await deletedMember.update({
+                updatedAt: Date.now(),
+                finishedAt: Date.now(),
+            });
+        }
+        else {
+            const err = new Error("Такого участника на проекте нет");
+            res.status(400);
+            res.send(err).status(400);
+        }
         res.send().status(200);
     }
     else {
