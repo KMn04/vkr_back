@@ -41,7 +41,8 @@ app.use("/task_statuses", taskStatuses);
 app.use("/task_priorities", taskPriorities);
 app.use("/profile", checkJWTMiddleware);
 app.use("/profile", users);
-app.use("/comments", comments)
+app.use("/comments", checkJWTMiddleware);
+app.use("/comments", comments);
 
 
 sequelize.sync().then(() => {
