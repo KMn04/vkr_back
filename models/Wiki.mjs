@@ -3,10 +3,15 @@ import Mongoose from 'mongoose';
 const { Schema } = Mongoose;
 
 const wikiPageSchema = new Schema({
-    wikiPageId: Mongoose.ObjectId,
+    projectId: Number,
+    title: String,
     content: String,
     editor: String,
+    createdAt: {
+        type: Date, 
+        default: Date.now()
+    },
     updatedAt: Date,
-    isDeleted: Date
+    deletedAt: Date
 });
 export const WikiPage = Mongoose.model('wikipage', wikiPageSchema);

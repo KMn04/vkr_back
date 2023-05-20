@@ -8,6 +8,7 @@ import { Currency } from "../models/Currency.mjs";
 import {Op} from 'sequelize'
 import projectTasks from './projectTasks.mjs';
 import projectTeam from './projectTeam.mjs';
+import wikiRouter from './wiki.mjs'
 
 const router = express.Router();
 
@@ -240,5 +241,6 @@ router.delete("/:projectId", async(req, res) => {
 
 router.use('', projectTasks);
 router.use('', projectTeam);
+router.use('', wikiRouter);
 
 export default router
