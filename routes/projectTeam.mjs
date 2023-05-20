@@ -161,7 +161,7 @@ router.delete("/:projectId/team/:userId", async(req, res) => {
         res.send().status(200);
     }
     else {
-        const err = new Error("У вас нет прав доступа на удаление участников этого проекта");
+        const err = new Error("У вас нет прав доступа на удаление участников с этого проекта");
         res.status(400);
         res.send(err).status(400);
     }
