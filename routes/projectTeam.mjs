@@ -153,7 +153,7 @@ router.delete("/:projectId/team/:userId", async(req, res) => {
                 userId: req.params.userId,
                 finishedAt: null
             }
-        })
+        });
         await deletedMember.update({
             updatedAt: Date.now(),
             finishedAt: Date.now(),
