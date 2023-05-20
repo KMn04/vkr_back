@@ -40,6 +40,7 @@ router.get("/", async (req, res) => {
             authorId: req.body.user.userId
         }
     }
+
     const allUserTasks = await Task.findAll({
         where: whereRequest,
         attributes: {
@@ -56,6 +57,7 @@ router.get("/", async (req, res) => {
             }
         ]
     });
+
     const preparedResult = allUserTasks.map((taskModel) => {
         return {
             taskId: taskModel.dataValues.taskId,
@@ -64,7 +66,8 @@ router.get("/", async (req, res) => {
             statusCode: taskModel.dataValues.statusCode,
             status: taskModel.taskStatus.name,
             priorityCode: taskModel.dataValues.priorityCode,
-            priority: taskModel.taskPriority.name
+            priority: taskModel.taskPriority.name,
+            projectId: taskModel.dataValues.projectId,
         }
     })
     res.send(preparedResult).status(200);

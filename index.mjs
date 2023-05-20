@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import sequelize from './db/postgre_connection.mjs';
-import mongoose from './db/mongo_connection.mjs';
 import register from "./routes/register.mjs";
 import auth from './routes/auth.mjs';
 import { checkJWTMiddleware } from './middlewares/checkJWTMiddleware.mjs';
@@ -14,6 +13,8 @@ import roles from "./routes/roles.mjs";
 import taskPriorities from "./routes/taskPriorities.mjs";
 import taskStatuses from "./routes/taskStatuses.mjs";
 import taskTypes from "./routes/taskTypes.mjs";
+import comments from './routes/comments.mjs'
+import './db/mongo_connection.mjs'
 
 
 export const app = express();
@@ -40,6 +41,7 @@ app.use("/task_statuses", taskStatuses);
 app.use("/task_priorities", taskPriorities);
 app.use("/profile", checkJWTMiddleware);
 app.use("/profile", users);
+app.use("/comments", comments)
 
 
 sequelize.sync().then(() => {

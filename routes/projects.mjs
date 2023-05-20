@@ -103,7 +103,7 @@ router.get("/:projectId", async (req, res) => {
             ownerName: tempProject.user.firstName,
             ownerSecondName: tempProject.user.secondName,
             statusCode: tempProject.dataValues.statusCode,
-            status: tempProject.projectStatus.name,
+            status: tempProject.projectStatus?.name,
             roleCode: actualRole.roleCode,
             role: actualRole.role.name
         }

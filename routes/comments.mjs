@@ -1,18 +1,10 @@
 import express from "express";
-import mongo_db from "../db/mongo_connection.mjs";
+import {Comment} from '../models/Comment.mjs'
 
 const router = express.Router();
 
-router.get("/comments", async (req, res) => {
-  let collection = await mongo_db.collection("comments");
-  let results = await collection.find({
-    where: {
-      
-    }
-  })
-    .limit(50)
-    .toArray();
-
+router.get("", async (req, res) => {
+  let results = await Comment.find();
   res.send(results).status(200);
 });
 

@@ -109,6 +109,19 @@ router.get("/:projectId/tasks/:taskId", async (req, res) => {
             where: {userId: task.dataValues.supervisorId},
             attributes: ['firstName', 'secondName']
         });
+
+        const assigneeName = assignee 
+            ? assignee.dataValues.firstName + " " + assignee.dataValues.secondName 
+            : ''
+
+        const supervizorName = supervisor 
+            ? supervisor.dataValues.firstName + " " + supervisor.dataValues.secondName 
+            : ''
+
+        const authorName = author 
+            ? author.dataValues.firstName + " " + author.dataValues.secondName 
+            : ''
+
         const preparedResult = {
             taskId: task.dataValues.taskId,
             name: task.dataValues.name,
@@ -128,11 +141,11 @@ router.get("/:projectId/tasks/:taskId", async (req, res) => {
             sumHoursPlan: task.dataValues.sumHoursPlan,
             sumHoursFact: task.dataValues.sumHoursFact,
             assigneeId: task.dataValues.assigneeId,
-            assignee: assignee.dataValues.firstName + " " + assignee.dataValues.secondName,
+            assignee: assigneeName,
             supervisorId: task.dataValues.supervisorId,
-            supervisor: supervisor.dataValues.firstName + " " + supervisor.dataValues.secondName,
+            supervisor: supervizorName,
             authorId: task.dataValues.authorId,
-            author: author.dataValues.firstName + " " + author.dataValues.secondName,
+            author: authorName,
             roleCode: actualRole.roleCode
         }
         res.send(preparedResult).status(200);

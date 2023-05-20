@@ -1,4 +1,3 @@
-import mongoose from "../db/mongo_connection.mjs";
 import Mongoose from 'mongoose';
 
 const { Schema } = Mongoose;
