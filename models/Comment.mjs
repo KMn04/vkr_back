@@ -3,12 +3,11 @@ import Mongoose from 'mongoose';
 const { Schema } = Mongoose;
 
 const commentSchema = new Schema({
-    commentId: Mongoose.ObjectId,
     taskId: Number,
     info: {
         author: String,
         text: String,
-        createdAt: Date,
+        createdAt: {type: Date, default: Date.now()},
         updatedAt: Date,
         deletedAt: Date
     },

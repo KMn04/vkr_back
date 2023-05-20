@@ -4,7 +4,7 @@ import { Role } from "../models/Role.mjs";
 const router = express.Router();
 
 // получить все возможные значения
-router.get("/roles", async (req, res) => {
+router.get("/", async (req, res) => {
     const allRoles = await Role.findAll();
     res.send(allRoles).status(200);
 });
