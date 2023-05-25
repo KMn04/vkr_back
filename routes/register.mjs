@@ -2,13 +2,15 @@ import express from "express";
 import { User } from "../models/User.mjs";
 import jwt from 'jsonwebtoken'
 import {jwtConstants} from '../constants.mjs'
+import { hashSync} from 'bcrypt'
 
 const router = express.Router();
 
 // регистрация
 router.post("/", async (req, res) => {
     const user_login = await User.findOne({
-        where: {login: req.body.login}});
+        where: {login: req.body.login}
+    });
     console.log(user_login)
     //проверка по логину что пользователя нет
     if(user_login){
@@ -18,19 +20,20 @@ router.post("/", async (req, res) => {
         return;
     }
     const user_email= await User.findOne({
-        where: {email: req.body.email}});
+        where: {email: req.body.email}
+    });
     console.log(user_email)
     //проверка что почта не использовалась ранее
     if(user_email){
         const err = new Error("Пользователь с такой почтой уже зарегистрирован");
-        res.status(400);
-        res.send(err).status(400);
+        res.status(400).send(err);
         return;
     }
     //добавить пользователя с указанными логин/пароль
+    const hashedPassword = hashSync(req.body.password, jwtConstants.salt);
     const new_user = {
         login: req.body.login,
-        password: req.body.password,
+        password: hashedPassword,
         firstName: req.body.firstName,
         secondName: req.body.secondName,
         email: req.body.email,

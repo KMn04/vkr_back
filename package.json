@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/KMn04/vkr_back#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "bluebird": "^3.7.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",

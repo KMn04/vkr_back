@@ -2,15 +2,17 @@ import express from "express";
 import { User } from "../models/User.mjs";
 import jwt from 'jsonwebtoken'
 import {jwtConstants} from '../constants.mjs'
+import {hashSync} from 'bcrypt'
 
 const router = express.Router();
 
 // аутентификация + авторизация
 router.post("/", async (req, res) => {
+    const hashedPassword = hashSync(req.body.password, jwtConstants.salt);
     const user_login = await User.findOne({
         where: {
             login: req.body.login,
-            password: req.body.password
+            password: hashedPassword
         }
     });
     //проверка по логину что пользователь есть
