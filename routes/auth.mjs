@@ -2,7 +2,8 @@ import express from "express";
 import { User } from "../models/User.mjs";
 import jwt from 'jsonwebtoken'
 import {jwtConstants} from '../constants.mjs'
-import {hashSync, compare} from 'bcrypt'
+import {compare} from 'bcrypt';
+import UserToken from '../models/UserToken.mjs'
 
 const router = express.Router();
 
@@ -22,7 +23,18 @@ router.post("/", async (req, res) => {
     if(compare(user_login.dataValues.password, req.body.password)){
         // добавить вывод ошибки, что пароль неверный
         const payload = {login: user_login.login};
-        res.send({token: jwt.sign(payload, jwtConstants.secret )})
+
+        const accessToken = jwt.sign(payload, jwtConstants.secret, {expiresIn: '14m'} )
+        const refreshToken = jwt.sign(payload, jwtConstants.secret, {expiresIn: '30d'});
+
+        const userToken = await UserToken.findOne({userId: user_login.dataValues.userId});
+        if(userToken){
+            await userToken.remove();
+        }
+
+        await new UserToken({userId: user_login.dataValues.userId, token: refreshToken}).save();
+
+        res.send({token:accessToken, refreshToken })
     }else{
         res.status(403).send('Пароль не совпадает')
     }

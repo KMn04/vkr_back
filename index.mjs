@@ -14,6 +14,7 @@ import taskPriorities from "./routes/taskPriorities.mjs";
 import taskStatuses from "./routes/taskStatuses.mjs";
 import taskTypes from "./routes/taskTypes.mjs";
 import comments from './routes/comments.mjs'
+import refreshToken from './routes/refreshToken.mjs'
 import './db/mongo_connection.mjs'
 
 
@@ -43,6 +44,7 @@ app.use("/profile", checkJWTMiddleware);
 app.use("/profile", users);
 app.use("/comments", checkJWTMiddleware);
 app.use("/comments", comments);
+app.use("/refreshToken", refreshToken)
 
 
 sequelize.sync().then(() => {

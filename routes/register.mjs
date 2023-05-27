@@ -3,6 +3,7 @@ import { User } from "../models/User.mjs";
 import jwt from 'jsonwebtoken'
 import {jwtConstants} from '../constants.mjs'
 import { hashSync, genSaltSync} from 'bcrypt'
+import UserToken from "../models/UserToken.mjs";
 
 const router = express.Router();
 
@@ -41,7 +42,18 @@ router.post("/", async (req, res) => {
     };
     const user = await User.create(new_user)
     const payload = {login: user.login};
-    res.send({token: jwt.sign(payload, jwtConstants.secret )})
+
+    const accessToken = jwt.sign(payload, jwtConstants.secret, {expiresIn: '14m'});
+    const refreshToken = jwt.sign(payload, jwtConstants.secret, {expiresIn: '30d'});
+
+    const userToken = await UserToken.findOne({userId: user.userId});
+    if(userToken){
+        await userToken.remove();
+    }
+
+    await new UserToken({userId: user.userId, token: refreshToken}).save();
+
+    res.send({token: accessToken, refreshToken})
 });
 
 export default router
