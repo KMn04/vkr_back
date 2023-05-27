@@ -2,7 +2,7 @@ import express from "express";
 import { User } from "../models/User.mjs";
 import jwt from 'jsonwebtoken'
 import {jwtConstants} from '../constants.mjs'
-import { hashSync} from 'bcrypt'
+import { hashSync, genSaltSync} from 'bcrypt'
 
 const router = express.Router();
 
@@ -29,8 +29,9 @@ router.post("/", async (req, res) => {
         res.status(400).send(err);
         return;
     }
+    const passwordSalt = await genSaltSync(jwtConstants.saltNumber)
     //добавить пользователя с указанными логин/пароль
-    const hashedPassword = hashSync(req.body.password, jwtConstants.salt);
+    const hashedPassword = hashSync(req.body.password, passwordSalt);
     const new_user = {
         login: req.body.login,
         password: hashedPassword,
