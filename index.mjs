@@ -15,6 +15,7 @@ import taskStatuses from "./routes/taskStatuses.mjs";
 import taskTypes from "./routes/taskTypes.mjs";
 import comments from './routes/comments.mjs'
 import refreshToken from './routes/refreshToken.mjs'
+import fileUpload from 'express-fileupload';
 import './db/mongo_connection.mjs'
 
 
@@ -27,6 +28,10 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Скоро тут будет главная страница с заманухой')
 })
+
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 },
+}));
 
 app.use("/register", register);
 app.use("/login", auth);

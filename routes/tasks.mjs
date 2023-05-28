@@ -508,4 +508,38 @@ router.delete('/:taskId', async(req, res) => {
     }
 });
 
+/**
+ * Для загрузки файлов, в postman нужно выбрать form-data
+ * тип поля выбрать file
+ * название поля "files"
+ */
+router.post('/:taskId/files', async (req, res) => {
+    try{
+        if(!req.files) {
+            res.send({
+                status: false,
+                message: 'No file uploaded'
+            });
+        } else {
+            let files = req.files.files;
+            const { taskId } = req.params
+            
+            if(Array.isArray(files)){
+                files.forEach(file => {
+                    file.mv('./uploads/' + `${taskId}_` + file.name)
+                })
+            }else{
+                files.mv('./uploads/' + `${taskId}_` + files.name);
+            }
+
+            res.send({
+                status: true,
+                message: 'File is uploaded',
+            });
+        }
+    } catch (err) {
+        res.status(500).send(err);
+    }
+})
+
 export default router
