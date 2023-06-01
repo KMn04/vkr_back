@@ -33,6 +33,8 @@ app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 },
 }));
 
+app.use(express.static('uploads'))
+
 app.use("/register", register);
 app.use("/login", auth);
 app.use("/projects", checkJWTMiddleware);
