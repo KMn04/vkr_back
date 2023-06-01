@@ -5,6 +5,19 @@ import {User} from "../models/User.mjs";
 
 const router = express.Router();
 
+router.get("/allUsers", async (req, res) => {
+    const allUsers = await User.findAll({
+        where: {
+            deletedAt: null
+        },
+        attributes: {
+            exclude: ['password', 'createdAt', 'updatedAt']
+        },
+        raw: true
+    })
+    res.send(allUsers)
+})
+
 // получение информации о пользователе
 router.get("/", async (req, res) => {
     const user = await User.findOne({

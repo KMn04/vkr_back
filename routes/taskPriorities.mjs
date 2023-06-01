@@ -4,7 +4,7 @@ import { TaskPriority } from "../models/TaskPriority.mjs";
 const router = express.Router();
 
 // получить все возможные значения
-router.get("/task_priority", async (req, res) => {
+router.get("/", async (req, res) => {
     const allTaskPriors = await TaskPriority.findAll();
     res.send(allTaskPriors).status(200);
 });

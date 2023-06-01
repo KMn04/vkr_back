@@ -4,7 +4,7 @@ import { TaskType } from "../models/TaskType.mjs";
 const router = express.Router();
 
 // получить все возможные значения
-router.get("/task_type", async (req, res) => {
+router.get("/", async (req, res) => {
     const allTaskTypes = await TaskType.findAll();
     res.send(allTaskTypes).status(200);
 });
