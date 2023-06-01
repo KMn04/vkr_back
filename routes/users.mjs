@@ -11,7 +11,7 @@ router.get("/allUsers", async (req, res) => {
             deletedAt: null
         },
         attributes: {
-            exclude: ['password', 'createdAt', 'updatedAt']
+            exclude: ['password', 'createdAt', 'updatedAt', 'deletedAt']
         },
         raw: true
     })

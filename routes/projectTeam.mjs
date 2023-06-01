@@ -81,6 +81,10 @@ router.post("/:projectId/team", async (req, res) => {
         if(email){
             whereRequest.email = email;
         }
+        const userId = req.body.userId;
+        if(userId){
+            whereRequest.userId = userId
+        }
         const memberUser = await User.findOne({
             where: whereRequest
         });

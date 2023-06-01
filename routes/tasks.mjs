@@ -214,8 +214,9 @@ router.put('/:taskId', async(req, res) => {
             }
         });
         if (actualRole.roleCode < 4) {
-            const {projectId, authorId, typeCode, ...newBody} = req.body;
+            const {projectId, authorId, ...newBody} = req.body;
             await thisTask.update(newBody);
+            await thisTask.save()
             const task = await Task.findOne(
                 {
                     where: {
@@ -271,11 +272,8 @@ router.put('/:taskId', async(req, res) => {
                 sumHoursPlan: task.dataValues.sumHoursPlan,
                 sumHoursFact: task.dataValues.sumHoursFact,
                 assigneeId: task.dataValues.assigneeId,
-                assignee: assignee.dataValues.firstName + " " + assignee.dataValues.secondName,
                 supervisorId: task.dataValues.supervisorId,
-                supervisor: supervisor.dataValues.firstName + " " + supervisor.dataValues.secondName,
                 authorId: task.dataValues.authorId,
-                author: author.dataValues.firstName + " " + author.dataValues.secondName
             }
             res.send(preparedResult).status(200);
         }
