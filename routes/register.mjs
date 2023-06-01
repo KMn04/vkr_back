@@ -46,10 +46,7 @@ router.post("/", async (req, res) => {
     const accessToken = jwt.sign(payload, jwtConstants.secret, {expiresIn: '14m'});
     const refreshToken = jwt.sign(payload, jwtConstants.secret, {expiresIn: '30d'});
 
-    const userToken = await UserToken.findOne({userId: user.userId});
-    if(userToken){
-        await userToken.remove();
-    }
+    const userToken = await UserToken.findOneAndRemove({userId: user.userId});
 
     await new UserToken({userId: user.userId, token: refreshToken}).save();
 
