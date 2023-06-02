@@ -27,13 +27,12 @@ router.post("", async (req, res) => {
     return;
   }
 
-  const commentPayload = {  
+  const commentPayload = {
     taskId: taskId,
     info: {
       author: authorName,
       text: req.body.comment,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
+      createdAt: Date.now()
     }
   }
   const newComment = new Comment(commentPayload)

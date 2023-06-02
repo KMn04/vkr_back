@@ -13,8 +13,10 @@ import roles from "./routes/roles.mjs";
 import taskPriorities from "./routes/taskPriorities.mjs";
 import taskStatuses from "./routes/taskStatuses.mjs";
 import taskTypes from "./routes/taskTypes.mjs";
-import comments from './routes/comments.mjs'
-import refreshToken from './routes/refreshToken.mjs'
+import comments from './routes/comments.mjs';
+import refreshToken from './routes/refreshToken.mjs';
+import notifications from './routes/notifications.mjs';
+import mails from './routes/mails.mjs';
 import fileUpload from 'express-fileupload';
 import './db/mongo_connection.mjs'
 
@@ -26,7 +28,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('Скоро тут будет главная страница с заманухой')
+  res.send('Скоро тут будет главная страница')
 })
 
 app.use(fileUpload({
@@ -51,7 +53,8 @@ app.use("/profile", checkJWTMiddleware);
 app.use("/profile", users);
 app.use("/comments", checkJWTMiddleware);
 app.use("/comments", comments);
-app.use("/refreshToken", refreshToken)
+app.use("/refreshToken", refreshToken);
+app.use("/mail", mails)
 
 
 sequelize.sync().then(() => {

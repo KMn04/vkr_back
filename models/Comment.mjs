@@ -7,9 +7,7 @@ const commentSchema = new Schema({
     info: {
         author: String,
         text: String,
-        createdAt: {type: Date, default: Date.now()},
-        updatedAt: Date,
-        deletedAt: Date
+        createdAt: {type: Date, default: Date.now()}
     },
     pageId: Mongoose.ObjectId
 });

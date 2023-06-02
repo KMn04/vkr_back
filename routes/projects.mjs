@@ -9,6 +9,7 @@ import {Op} from 'sequelize'
 import projectTasks from './projectTasks.mjs';
 import projectTeam from './projectTeam.mjs';
 import wikiRouter from './wiki.mjs'
+import notifications from "./notifications.mjs";
 
 const router = express.Router();
 
@@ -241,6 +242,7 @@ router.delete("/:projectId", async(req, res) => {
 
 router.use('', projectTasks);
 router.use('', projectTeam);
+router.use('', notifications);
 router.use('', wikiRouter);
 
 export default router
