@@ -30,7 +30,7 @@ router.get("/", async (req, res) => {
         const preparedResult = {
             userId: req.body.user.userId,
             secondName: user.secondName,
-            name: user.firstName,
+            firstName: user.firstName,
             middleName: user.thirdName ?? '',
             login: user.login,
             email: user.email
@@ -57,6 +57,7 @@ router.put("/", async (req, res) => {
     if (userInfo){
         const {user, ...newBody} = req.body;
         await userInfo.update(newBody);
+        await userInfo.save();
         const preparedResult = {
             userId: req.body.user.userId,
             secondName: userInfo.secondName,
