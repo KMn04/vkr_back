@@ -2,7 +2,6 @@ import express from "express";
 import nodemailer from 'nodemailer';
 
 const router = express.Router();
-const nodemailer = nodemailer();
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -15,14 +14,7 @@ const transporter = nodemailer.createTransport({
     secure: true,
 });
 
-transporter.sendMail(mailOptions,  (err, info) => {
-    if(err)
-        console.log(err)
-    else
-        console.log(info);
-});
-
-router.post("/mail", async(req, res) => {
+router.post("/", async(req, res) => {
     const { to, subject, text } = req.body;
     const mailData = {
         from: 'task.hub7@gmail.com',
@@ -30,7 +22,7 @@ router.post("/mail", async(req, res) => {
         subject: subject,
         text: text
     };
-    transporter.sendMail(mailOptions,  (err, info) => {
+    transporter.sendMail(mailData,  (err, info) => {
         if (err) {
             return console.log(err);
         }
