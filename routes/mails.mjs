@@ -1,17 +1,18 @@
 import express from "express";
-import nodemailer from 'nodemailer';
+import nodemailer, { createTestAccount } from 'nodemailer';
 
 const router = express.Router();
 
+const testAccount = await createTestAccount()
+
 const transporter = nodemailer.createTransport({
-    service: "gmail",
     port: 587,
-    host: "smtp.gmail.com",
+    host: "smtp.ethereal.email",
     auth: {
-        user: 'task.hub7@gmail.com',
-        pass: 'RIRA14pauy$c',
+        user: testAccount.user,
+        pass: testAccount.pass,
     },
-    secure: true,
+    secure: false,
 });
 
 router.post("/", async(req, res) => {
@@ -24,6 +25,7 @@ router.post("/", async(req, res) => {
     };
     transporter.sendMail(mailData,  (err, info) => {
         if (err) {
+            res.status(400);
             return console.log(err);
         }
         res.send({message: "Mail send", message_id: info.message_id}).status(200);
