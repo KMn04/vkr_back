@@ -44,12 +44,15 @@ router.post("/:projectId/notifications", async (req, res) => {
     });
     if (actualRole < 4) {
         const projectId = req.params.projectId;
-        const user = await User.findOne({userId: req.body.userId})
+        const user = await User.findOne({userId: req.body.userId});
         let results = await Notification.find({id: projectId, receiverId: user.userId});
-        for (each in results) {
+        if (results) {
+            results.forEach((notification) => {
+
+            });
+        } else {
 
         }
-
         res.send().status(200);
     } else {
         const err = new Error("У вас нет доступа для настройки уведомлений");
