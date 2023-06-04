@@ -50,10 +50,6 @@ router.post("/:projectId/notifications", async (req, res) => {
 
         }
 
-        разбор пришедших увед
-        добавление
-        удаление
-
         res.send().status(200);
     } else {
         const err = new Error("У вас нет доступа для настройки уведомлений");

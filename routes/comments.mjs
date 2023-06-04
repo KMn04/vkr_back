@@ -45,7 +45,7 @@ router.post("/:taskId/comments", async (req, res) => {
     await WikiPage.updateOne(
         {_id: commentPayload.pageId},
         {$set: {
-            content: page.content + "/n" + commentPayload.text,
+            content: `${page.content ?? ''}\n${commentPayload.text}`,
             editor: commentPayload.author,
             updatedAt: Date.now()
           }
