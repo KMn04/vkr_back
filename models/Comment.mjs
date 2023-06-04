@@ -4,11 +4,9 @@ const { Schema } = Mongoose;
 
 const commentSchema = new Schema({
     taskId: Number,
-    info: {
-        author: String,
-        text: String,
-        createdAt: {type: Date, default: Date.now()}
-    },
+    author: String,
+    text: String,
+    createdAt: {type: Date, default: Date.now()},
     pageId: Mongoose.ObjectId
 });
 

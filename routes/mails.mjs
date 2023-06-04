@@ -12,7 +12,14 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+
 router.post("/", async(req, res) => {
+    if (req.body.type < 6) { // проекты
+        const projectId = req.body.id;
+        const allNotif = await Notification.find({id: projectId})
+    } else if (req.body.type > 5) { // задачи
+        const taskId = req.body.id;
+    }
     const { to, subject, text } = req.body;
     const mailData = {
         from: 'task.hub@mail.ru',
@@ -25,7 +32,7 @@ router.post("/", async(req, res) => {
             res.status(400);
             return console.log(err);
         }
-        res.send({message: "Mail send", message_id: info.message_id}).status(200);
+        res.send({message: "Email sent", message_id: info.message_id}).status(200);
     });
 });
 

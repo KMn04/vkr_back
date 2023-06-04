@@ -7,6 +7,8 @@ import {TaskPriority} from "../models/TaskPriority.mjs";
 import {TaskType} from "../models/TaskType.mjs";
 import {Project} from "../models/Project.mjs";
 import {User} from "../models/User.mjs";
+import wikiRouter from "./wiki.mjs";
+import comments from "./comments.mjs";
 
 const router = express.Router();
 
@@ -539,5 +541,7 @@ router.post('/:taskId/files', async (req, res) => {
         res.status(500).send(err);
     }
 })
+
+router.use('', comments);
 
 export default router
