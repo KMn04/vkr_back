@@ -1,24 +1,21 @@
 import express from "express";
-import nodemailer, { createTestAccount } from 'nodemailer';
+import nodemailer from 'nodemailer';
 
 const router = express.Router();
 
-const testAccount = await createTestAccount()
-
 const transporter = nodemailer.createTransport({
-    port: 587,
-    host: "smtp.ethereal.email",
+    port: 465,
+    host: "smtp.mail.ru",
     auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
+        user: 'task.hub@mail.ru',
+        pass: 'ymgcckBzLrJtgeqRGfbP'
     },
-    secure: false,
 });
 
 router.post("/", async(req, res) => {
     const { to, subject, text } = req.body;
     const mailData = {
-        from: 'task.hub7@gmail.com',
+        from: 'task.hub@mail.ru',
         to: to,
         subject: subject,
         text: text
