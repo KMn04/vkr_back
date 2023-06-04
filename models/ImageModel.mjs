@@ -7,6 +7,7 @@ const imageSchema = new Schema({
     taskId: Number,
     img:
     {
+        name: String,
         data: Buffer,
         contentType: String
     }

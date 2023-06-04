@@ -517,7 +517,7 @@ router.post('/:taskId/files', async (req, res) => {
     try{
         if(!req.files) {
             res.send({
-                status: false,
+                status: 400,
                 message: 'No file uploaded'
             });
         } else {
@@ -557,7 +557,7 @@ router.get('/:taskId/files', async (req,res) => {
     const result = [];
 
     for await (const doc of ImageModel.find({taskId: req.params.taskId})) {
-        result.push(doc._id)
+        result.push({id: doc._id, name: doc.img.name})
     };
 
     res.send(result)
