@@ -15,10 +15,11 @@ import taskStatuses from "./routes/taskStatuses.mjs";
 import taskTypes from "./routes/taskTypes.mjs";
 import comments from './routes/comments.mjs';
 import refreshToken from './routes/refreshToken.mjs';
-import notifications from './routes/notifications.mjs';
 import mails from './routes/mails.mjs';
+import files from './routes/files.mjs'
 import fileUpload from 'express-fileupload';
 import './db/mongo_connection.mjs'
+import bodyParser from 'body-parser';
 
 
 export const app = express();
@@ -26,6 +27,10 @@ const port = 3000
 
 app.use(cors());
 app.use(express.json());
+
+app.use(bodyParser.urlencoded(
+  { extended:true }
+))
 
 app.get('/', (req, res) => {
   res.send('Скоро тут будет главная страница')
@@ -55,6 +60,7 @@ app.use("/comments", checkJWTMiddleware);
 app.use("/comments", comments);
 app.use("/refreshToken", refreshToken);
 app.use("/mail", mails)
+app.use("/files", files)
 
 
 sequelize.sync().then(() => {

@@ -7,9 +7,9 @@ import {TaskPriority} from "../models/TaskPriority.mjs";
 import {TaskType} from "../models/TaskType.mjs";
 import {Project} from "../models/Project.mjs";
 import {User} from "../models/User.mjs";
+import {ImageModel} from "../models/ImageModel.mjs";
 
 const router = express.Router();
-
 
 // получить все задачи пользователя с учётом фильтрации его роли на задаче
 router.get("/", async (req, res) => {
@@ -523,11 +523,21 @@ router.post('/:taskId/files', async (req, res) => {
             const { taskId } = req.params
             
             if(Array.isArray(files)){
-                files.forEach(file => {
-                    file.mv('./uploads/' + `${taskId}_` + file.name)
+                files.forEach(async (file) => {
+                    const result = ImageModel({
+                        name: files.name,
+                        taskId: taskId,
+                        img: {...file, contentType: file.mimetype}
+                    })
+                    await result.save()
                 })
             }else{
-                files.mv('./uploads/' + `${taskId}_` + files.name);
+                const result = new ImageModel({
+                    name: files.name,
+                    taskId: taskId,
+                    img: {...files, contentType: files.mimetype}
+                })
+                await result.save()
             }
 
             res.send({
@@ -538,6 +548,16 @@ router.post('/:taskId/files', async (req, res) => {
     } catch (err) {
         res.status(500).send(err);
     }
+})
+
+router.get('/:taskId/files', async (req,res) => {
+    const result = [];
+
+    for await (const doc of ImageModel.find({taskId: req.params.taskId})) {
+        result.push(doc._id)
+    };
+
+    res.send(result)
 })
 
 export default router
