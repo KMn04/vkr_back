@@ -41,9 +41,14 @@ router.post("/:taskId/comments", async (req, res) => {
   res.send(newComment).status(200);
 
   if(commentPayload.pageId) {
-    const page = await WikiPage.updateOne(
+    const page =  await WikiPage.findOne({_id: commentPayload.pageId});
+    await WikiPage.updateOne(
         {_id: commentPayload.pageId},
-        {$set: {content: page.content + "/n" + commentPayload.text}}
+        {$set: {content: page.content + "/n" + commentPayload.text,
+                        editor: commentPayload.author,
+                        updatedAt: Date.now()
+                      }
+        }
     );
   }
 });
